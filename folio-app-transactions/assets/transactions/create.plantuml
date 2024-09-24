@@ -1,0 +1,28 @@
+@startuml
+actor User
+
+participant "Controller" as Controller
+participant "Validator" as Validator
+participant "Service" as Service
+database "Database" as Database
+
+User -> Controller: POST /transaction
+activate Controller
+
+Controller -> Validator: Check constraints
+activate Validator
+
+Validator -> Service: Perform mapping\nfrom DTO to Entity
+activate Service
+
+Service -> Database: Save Entity
+activate Database
+Database-> Service: Saved Entity\nwith ID
+deactivate Database
+
+Service -> Controller
+deactivate Service
+
+Controller -> User: Return 201
+deactivate Controller
+@enduml

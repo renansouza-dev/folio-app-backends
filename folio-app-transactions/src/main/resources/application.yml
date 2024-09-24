@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: folio-app-transactions
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+application:
+  caching:
+    spring:
+      cacheTTL: 43200000 # 12 hours -> 12 x 3600 x 1000 = 43200000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"
+  metrics:
+    tags:
+      application: ${spring.application.name}

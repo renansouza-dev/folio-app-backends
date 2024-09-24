@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16.3-alpine
+    container_name: postgres
+#    networks:
+#      - monitoring
+#      - transactions
+    ports:
+       - "5432:5432"
+    environment:
+      POSTGRES_USER: folio-user
+      POSTGRES_PASSWORD: folio-pass
+      POSTGRES_DB: folio-app-transactions
+
+#  transactions:
+#    image: renansouza-dev/folio-app-transactions
+#    container_name: folio-app-transactions
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - monitoring
+#      - transactions
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/folio-app-transactions
+#      - SPRING_DATASOURCE_USERNAME=folio-user
+#      - SPRING_DATASOURCE_PASSWORD=folio-pass
+#      - SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.50'  # Limit the container to use at most 50% of a CPU core
+#          memory: '256M'  # Limit the container to use at most 256MB of memory
+
+#networks:
+#  transactions:
+#    driver: bridge
+#  monitoring:
+#    external: true
