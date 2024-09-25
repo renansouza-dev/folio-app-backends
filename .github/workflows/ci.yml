@@ -8,16 +8,16 @@ on:
 
 jobs:
   build:
-    uses: ./github/workflows/reusable/build-and-cache.yml@develop
+    uses: ./github/workflows/reusable/build-and-cache.yml@main
 
   unit-test:
     needs: build
-    uses: ./github/workflows/reusable/unit-test.yml@develop
+    uses: ./github/workflows/reusable/unit-test.yml@main
 
   integration-test:
     needs: build
-    uses: ./github/workflows/reusable/integration-test.yml@develop
+    uses: ./github/workflows/reusable/integration-test.yml@main
 
   code-analysis:
     needs: [unit-test, integration-test]
-    uses: ./github/workflows/reusable/code-analysis.yml@develop
+    uses: ./github/workflows/reusable/code-analysis.yml@main
