@@ -69,7 +69,7 @@ jobs:
         echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
 
     - name: Commit the badge (if it changed)
-    - uses: actions/checkout@v4
+      uses: actions/checkout@v4
         - run: |
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
