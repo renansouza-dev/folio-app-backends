@@ -1,4 +1,4 @@
-name: Unit Testing
+name: Integration Tests
 
 on:
   workflow_call:
