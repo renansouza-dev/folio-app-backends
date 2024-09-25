@@ -16,7 +16,7 @@
 	<properties>
 		<lombok.version>1.18.34</lombok.version>
 		<flyway.version>10.10.0</flyway.version>
-		<instancio-junit.version>5.0.1</instancio-junit.version>
+		<instancio-junit.version>5.0.2</instancio-junit.version>
 		<hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 	</properties>
 
