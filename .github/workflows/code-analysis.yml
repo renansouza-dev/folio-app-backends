@@ -5,12 +5,10 @@ on:
     inputs:
       java-distro:
         description: 'Java flavor to use'
-        required: true
         default: 'temurin'
         type: string
       java-version:
         description: 'Java version to use'
-        required: true
         default: '21'
         type: string
 
