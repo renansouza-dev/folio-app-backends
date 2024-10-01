@@ -1,2 +1,1 @@
-[![Java CI with Maven](https://github.com/renansouza-dev/folio-app-backends/actions/workflows/maven.yml/badge.svg?branch=develop)](https://github.com/renansouza-dev/folio-app-backends/actions/workflows/maven.yml)
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=renansouza-dev_folio-app-backends)](https://sonarcloud.io/summary/new_code?id=renansouza-dev_folio-app-backends)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=renansouza-dev_folio-app-backends&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=renansouza-dev_folio-app-backends)
