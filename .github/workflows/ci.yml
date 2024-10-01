@@ -21,3 +21,5 @@ jobs:
   code-analysis:
     needs: [unit-test, integration-test]
     uses: ./.github/workflows/code-analysis.yml
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}

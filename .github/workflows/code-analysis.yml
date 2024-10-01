@@ -11,6 +11,9 @@ on:
         description: 'Java version to use'
         default: '21'
         type: string
+      sonar-token:
+        description: 'sonar token from secrets'
+        type: string
 
 jobs:
   sonar:
@@ -29,5 +32,4 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ inputs.sonar-token }}
