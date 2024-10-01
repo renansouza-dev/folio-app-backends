@@ -11,9 +11,10 @@ on:
         description: 'Java version to use'
         default: '21'
         type: string
-      sonar-token:
-        description: 'sonar token from secrets'
-        type: string
+    secrets:
+      SONAR_TOKEN:
+        description: 'SonarCloud authentication token'
+        required: true
 
 jobs:
   sonar:
@@ -32,4 +33,4 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          SONAR_TOKEN: ${{ inputs.sonar-token }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
