@@ -1,0 +1,46 @@
+name: Code Analysis
+
+on:
+  workflow_call:
+    inputs:
+      java-distro:
+        description: 'Java flavor to use'
+        default: 'temurin'
+        type: string
+      java-version:
+        description: 'Java version to use'
+        default: '21'
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        description: 'SonarCloud authentication token'
+        required: true
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK ${{ inputs.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: ${{ inputs.java-distro }}
+          cache: maven
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Restore Maven cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=renansouza-dev -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=renansouza-dev -Dsonar.projectKey=renansouza-dev_folio-app-backends
