@@ -1,0 +1,46 @@
+@startuml
+autonumber
+actor User
+
+User -> Controller: POST /transaction
+activate Controller
+
+Controller -> Validator: Validate transaction
+activate Validator
+Validator -> Validator: Perform validation checks
+Validator -> Controller: Validation result
+deactivate Validator
+
+entity Entity as Cache
+
+alt Validation passes
+    Controller -> Service: saveTransaction(transaction)
+    activate Service
+
+    database Database as db
+    Service -> db: save(transaction)
+    activate db
+
+    deactivate db
+
+    queue Queue as AccountQueue
+    Service -> AccountQueue: sendAccountQueueMessage(transaction)
+    activate AccountQueue
+    deactivate AccountQueue
+
+    activate Cache
+    Service -> Cache: send new transaction to cache
+    deactivate Cache
+
+    Service -> Controller: Transaction saved
+    deactivate Service
+
+    Controller -> User: 201 Created (Transaction saved)
+deactivate Controller
+
+else Validation fails
+    Controller -> User: 400 Bad Request (Validation error)
+deactivate Controller
+end
+
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+autonumber
+actor User
+
+User -> Controller: DELETE /transaction/{id}
+activate Controller
+
+entity Entity as Cache
+
+alt Validation passes
+    Controller -> Service: deleteTransaction(id)
+    activate Service
+
+    Service -> Repository: findById(id)
+    activate Repository
+    Repository -> Service: Transaction found
+    deactivate Repository
+
+    Service -> Repository: delete(transaction)
+    activate Repository
+    Repository -> Service: Transaction deleted
+    deactivate Repository
+
+    queue Queue as AccountQueue
+    Service -> AccountQueue: sendAccountQueueMessage(transaction)
+    activate AccountQueue
+    deactivate AccountQueue
+
+    activate Cache
+    Service -> Cache: remove transaction from cache
+    deactivate Cache
+
+    Service -> Controller: Transaction deleted
+    deactivate Service
+
+    Controller -> User: 200 OK (Transaction deleted)
+deactivate Controller
+
+else Validation fails
+    Controller -> User: 404 Not Found (Transaction not found or invalid)
+deactivate Controller
+end
+
+@enduml
