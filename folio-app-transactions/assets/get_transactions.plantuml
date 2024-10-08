@@ -1,0 +1,43 @@
+@startuml
+autonumber
+actor User
+
+User -> Controller: GET /transactions \n using filter, pagination and sorting
+activate Controller
+
+alt Transactions exists in Cache
+    entity Entity as Cache
+    Controller -> Cache: Get transaction from cache
+    activate Cache
+    Cache -> Controller: Cached transaction
+    deactivate Cache
+
+    Controller -> User: 200 OK (Cached transaction)
+    deactivate Controller
+
+else Transactions not in Cache
+    Controller -> Service: getTransaction(id)
+    activate Service
+
+    Service -> Repository: findAll
+    activate Repository
+
+    Repository -> Service: Transaction found
+    deactivate Repository
+
+    activate Cache
+    Service -> Cache: Cache transaction
+    deactivate Cache
+
+    Service -> Controller: Transaction found
+    deactivate Service
+
+    Controller -> User: 200 OK (Transaction found)
+    deactivate Controller
+
+else Transactions not found
+    Controller -> User: 204 Not Found
+    deactivate Controller
+end
+
+@enduml

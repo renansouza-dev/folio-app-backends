@@ -29,6 +29,11 @@
 
 <summary>Sequence Diagram</summary>
 
-
+### Get Sequence Diagram
+![Get Transactions](./assets/get_transactions.png "get diagram")
+### Create Sequence Diagram
+![Create Transactions](./assets/create_transactions.png "create diagram")
+### Delete Sequence Diagram
+![Delete Transactions](./assets/delete_transactions.png "delete diagram")
 
 </details>
