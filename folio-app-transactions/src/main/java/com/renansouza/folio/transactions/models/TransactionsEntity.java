@@ -52,15 +52,15 @@ public class TransactionsEntity {
     private String asset;
 
     @PositiveOrZero
-    @Column(nullable = false, precision = 9)
+    @Column(nullable = false, precision = 9, scale = 2)
     private BigDecimal price;
 
     @PositiveOrZero
-    @Column(nullable = false, precision = 9)
+    @Column(nullable = false)
     private int quantity;
 
     @PositiveOrZero
-    @Column(nullable = false, precision = 9)
+    @Column(nullable = false, precision = 9, scale = 2)
     private BigDecimal fee;
 
     @NotNull
@@ -84,7 +84,9 @@ public class TransactionsEntity {
 
     @Override
     public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+        return this instanceof HibernateProxy hibernateProxy
+                ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass().hashCode()
+                : getClass().hashCode();
     }
 
 }

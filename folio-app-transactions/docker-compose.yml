@@ -12,27 +12,40 @@ services:
       POSTGRES_PASSWORD: folio-pass
       POSTGRES_DB: folio-app-transactions
 
-#  transactions:
-#    image: renansouza-dev/folio-app-transactions
-#    container_name: folio-app-transactions
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8080:8080"
-#    networks:
+  rabbitmq:
+    image: rabbitmq:4.0.2-management-alpine
+    container_name: rabbitmq
+    #    networks:
+    #      - monitoring
+    #      - transactions
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=folio-user
+      - RABBITMQ_DEFAULT_PASS=folio-pass
+
+  transactions:
+    image: renansouza-dev/folio-app-transactions
+    container_name: folio-app-transactions
 #      - monitoring
 #      - transactions
-#    environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/folio-app-transactions
-#      - SPRING_DATASOURCE_USERNAME=folio-user
-#      - SPRING_DATASOURCE_PASSWORD=folio-pass
-#      - SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.50'  # Limit the container to use at most 50% of a CPU core
-#          memory: '256M'  # Limit the container to use at most 256MB of memory
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+#    networks:
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/folio-app-transactions
+      - SPRING_DATASOURCE_USERNAME=folio-user
+      - SPRING_DATASOURCE_PASSWORD=folio-pass
+      - SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'  # Limit the container to use at most 50% of a CPU core
+          memory: '256M'  # Limit the container to use at most 256MB of memory
 
 #networks:
 #  transactions:

@@ -1,10 +1,10 @@
 package com.renansouza.folio.transactions;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.renansouza.folio.transactions.models.TransactionsEntity;
+import com.renansouza.folio.transactions.exceptions.TransactionNotFoundException;
+import com.renansouza.folio.transactions.models.TransactionsRequest;
 import com.renansouza.folio.transactions.models.TransactionsResponse;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -15,13 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.renansouza.folio.transactions.TransactionsUtils.getEntities;
-import static com.renansouza.folio.transactions.TransactionsUtils.getFailureResquest;
+import static com.renansouza.folio.transactions.TransactionsUtils.getFailureRequest;
 import static com.renansouza.folio.transactions.TransactionsUtils.getRequests;
 import static com.renansouza.folio.transactions.TransactionsUtils.getResponses;
 import static org.hamcrest.CoreMatchers.is;
@@ -30,7 +29,9 @@ import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -56,7 +57,7 @@ class TransactionsControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    TransactionsRepository repository;
+    TransactionsService service;
 
     @Test
     @DisplayName("get zero transactions without filters.")
@@ -67,7 +68,7 @@ class TransactionsControllerTest {
         mvc.perform(get(PATH)).andExpect(status().isNoContent());
 
         // Verify that the repository was called with the correct arguments
-        verify(repository, ONCE).findAllTransactions(any(Pageable.class));
+        verify(service, ONCE).find(any(), any(), any(PageRequest.class));
     }
 
     @Test
@@ -76,20 +77,20 @@ class TransactionsControllerTest {
         // Given
         String broker = "BROKER";
         var byBrokers = getResponses(10).stream().filter(transaction -> broker.equals(transaction.broker())).toList();
-        when(repository.findAllTransactionsByBroker(anyString(), any(Pageable.class))).thenReturn(new PageImpl<>(byBrokers));
+        when(service.find(eq(broker), any(), any(PageRequest.class))).thenReturn(new PageImpl<>(byBrokers));
 
         // Then
         mvc.perform(get(PATH).param("broker", broker).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
 
         // Verify that the repository was called with the correct arguments
-        verify(repository, ONCE).findAllTransactionsByBroker(anyString(), any(Pageable.class));
+        verify(service, ONCE).find(eq(broker), any(), any(PageRequest.class));
     }
 
     @Test
     @DisplayName("get all transactions without filters.")
     void getTransactions() throws Exception {
         // Given
-        when(repository.findAllTransactions(any(Pageable.class))).thenReturn(new PageImpl<>(getResponses(3)));
+        when(service.find(any(), any(), any(PageRequest.class))).thenReturn(new PageImpl<>(getResponses(3)));
 
         // Then
         mvc.perform(get(PATH))
@@ -99,7 +100,7 @@ class TransactionsControllerTest {
                 .andExpect(jsonPath("$.content", hasSize(3)));
 
         // Verify that the repository was called with the correct arguments
-        verify(repository, ONCE).findAllTransactions(any(Pageable.class));
+        verify(service, ONCE).find(any(), any(), any(PageRequest.class));
     }
 
     @Test
@@ -110,13 +111,13 @@ class TransactionsControllerTest {
         var broker = responseList.getFirst().broker();
         var byBrokers = responseList.stream().filter(transaction -> broker.equals(transaction.broker())).toList();
 
-        when(repository.findAllTransactionsByBroker(anyString(), any(Pageable.class))).thenReturn(new PageImpl<>(byBrokers));
+        when(service.find(eq(broker), any(), any(PageRequest.class))).thenReturn(new PageImpl<>(byBrokers));
 
         // Then
         mvc.perform(get(PATH).param("broker", broker).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
         // Verify that the repository was called with the correct arguments
-        verify(repository, ONCE).findAllTransactionsByBroker(anyString(), any(Pageable.class));
+        verify(service, ONCE).find(eq(broker), any(), any(PageRequest.class));
     }
 
     @Test
@@ -127,7 +128,7 @@ class TransactionsControllerTest {
         var asset = responseList.getFirst().asset();
         var byAssets = getResponses(5).stream().filter(transaction -> asset.equals(transaction.asset())).toList();
 
-        when(repository.findAllTransactionsByAsset(anyString(), any(Pageable.class))).thenReturn(new PageImpl<>(byAssets));
+        when(service.find(any(), eq(asset), any(PageRequest.class))).thenReturn(new PageImpl<>(byAssets));
 
         // Then
         mvc.perform(get(PATH).param("asset", asset).accept(MediaType.APPLICATION_JSON))
@@ -137,7 +138,7 @@ class TransactionsControllerTest {
                 .andExpect(jsonPath("$.content", hasSize(byAssets.size())));
 
         // Verify that the repository was called with the correct arguments
-        verify(repository, ONCE).findAllTransactionsByAsset(anyString(), any(Pageable.class));
+        verify(service, ONCE).find(any(), eq(asset), any(PageRequest.class));
     }
 
     @Test
@@ -150,7 +151,7 @@ class TransactionsControllerTest {
                 .andExpect(status().isCreated());
 
         // Verify that the repository was called with the correct arguments
-        verify(repository, ONCE).save(any(TransactionsEntity.class));
+        verify(service, ONCE).save(any(TransactionsRequest.class));
     }
 
     @Test
@@ -159,7 +160,7 @@ class TransactionsControllerTest {
         // Given
 
         // The
-        mvc.perform(post(PATH).content(getFailureResquest()).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(post(PATH).content(getFailureRequest()).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.path", is(PATH)))
@@ -169,31 +170,30 @@ class TransactionsControllerTest {
                 .andExpect(jsonPath("$.message", stringContainsInOrder("date: Date cannot be null.")));
 
         // Verify that the repository was called with the correct arguments
-        verify(repository, never()).save(any(TransactionsEntity.class));
+        verify(service, never()).save(any(TransactionsRequest.class));
     }
 
     @Test
     @DisplayName("delete a transaction by providing an id.")
     void deleteTransaction() throws Exception {
         // Given
-        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(getEntities(1).getFirst()));
+        doNothing().when(service).delete(anyLong());
 
         // Then
         mvc.perform(delete(PATH + "/{id}", 1)).andExpect(status().isNoContent());
 
         // Verify that the repository was called with the correct arguments
-        verify(repository, ONCE).findById(anyLong());
-        verify(repository, ONCE).delete(any(TransactionsEntity.class));
+        verify(service, ONCE).delete(anyLong());
     }
 
     @Test
     @DisplayName("fail to delete a transaction by providing an id due to not found.")
     void failToDeleteTransaction() throws Exception {
         // Given
-        when(repository.findById(anyLong())).thenReturn(Optional.empty());
+        var id = 1;
+        doThrow(new TransactionNotFoundException(id)).when(service).delete(anyLong());
 
         // Then
-        var id = 1;
         var message = String.format("The provided id %s transaction was not found", id);
         mvc.perform(delete(PATH + "/{id}", id))
                 .andExpect(status().isNotFound())
@@ -203,8 +203,7 @@ class TransactionsControllerTest {
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.value())));
 
         // Verify that the repository was called with the correct arguments
-        verify(repository, ONCE).findById(anyLong());
-        verify(repository, never()).delete(any(TransactionsEntity.class));
+        verify(service, ONCE).delete(anyLong());
     }
 
 }
