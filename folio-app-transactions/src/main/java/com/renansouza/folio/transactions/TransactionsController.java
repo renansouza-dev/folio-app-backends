@@ -2,8 +2,6 @@ package com.renansouza.folio.transactions;
 
 import java.util.Objects;
 
-import com.renansouza.folio.transactions.exceptions.TransactionNotFoundException;
-import com.renansouza.folio.transactions.models.TransactionsMapper;
 import com.renansouza.folio.transactions.models.TransactionsRequest;
 import com.renansouza.folio.transactions.models.TransactionsResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 })
 public class TransactionsController {
 
-    private final TransactionsRepository repository;
+    private final TransactionsService service;
 
     @Operation(summary = "Get a list of transaction")
     @ApiResponses(value = {
@@ -66,15 +64,9 @@ public class TransactionsController {
         var sort = Sort.by(Sort.Direction.fromString(direction), property);
         var page = PageRequest.of(Integer.parseInt(pageNumber), Integer.parseInt(pageSize), sort);
 
-        if (Objects.nonNull(broker)) {
-            return buildResponse(repository.findAllTransactionsByBroker(broker, page));
-        }
-
-        if (Objects.nonNull(asset)) {
-            return buildResponse(repository.findAllTransactionsByAsset(asset, page));
-        }
-
-        return buildResponse(repository.findAllTransactions(page));
+        var transactions = service.find(broker, asset, page);
+        if (Objects.isNull(transactions) || transactions.isEmpty()) return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(transactions);
     }
 
     @PostMapping
@@ -88,7 +80,7 @@ public class TransactionsController {
     })
     @CacheEvict(value = "transactionsCache", allEntries = true)
     void addTransaction(@Valid @RequestBody TransactionsRequest request) {
-        repository.save(TransactionsMapper.dtoToEntity(request));
+        service.save(request);
     }
 
     @DeleteMapping("/{id}")
@@ -97,17 +89,8 @@ public class TransactionsController {
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Delete transaction")})
     @CacheEvict(value = "transactionsCache", allEntries = true)
     @Scheduled(fixedRateString = "${application.caching.spring.cacheTTL}")
-    void deleteIndex(@PathVariable("id") Long id) {
-        var transaction = repository.findById(id)
-                .orElseThrow(() -> new TransactionNotFoundException(id.toString()));
-
-        repository.delete(transaction);
-    }
-
-    private ResponseEntity<Page<TransactionsResponse>> buildResponse(Page<TransactionsResponse> page) {
-        if (Objects.isNull(page) || page.isEmpty()) return ResponseEntity.noContent().build();
-
-        return ResponseEntity.ok(page);
+    void deleteTransaction(@PathVariable("id") Long id) {
+        service.delete(id);
     }
 
 }

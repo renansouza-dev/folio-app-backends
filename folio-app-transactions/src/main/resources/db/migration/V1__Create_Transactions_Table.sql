@@ -3,9 +3,9 @@ CREATE TABLE transactions (
    date date NOT NULL,
    type SMALLINT,
    asset VARCHAR(6) NOT NULL,
-   price DECIMAL(9) NOT NULL,
+   price DECIMAL(9, 2) NOT NULL,
    quantity INTEGER NOT NULL,
-   fee DECIMAL(9) NOT NULL,
+   fee DECIMAL(9, 2) NOT NULL,
    broker VARCHAR(10) NOT NULL,
    deleted boolean NOT NULL DEFAULT FALSE,
    CONSTRAINT pk_transactions PRIMARY KEY (id)

@@ -6,14 +6,17 @@ spring:
       ddl-auto: none
     open-in-view: false
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/folio-app-transactions}
+    username: ${SPRING_DATASOURCE_USERNAME:folio-user}
+    password: ${SPRING_DATASOURCE_PASSWORD:folio-pass}
+  rabbitmq:
+    username: ${SPRING_MESSAGING_USERNAME:folio-user}
+    password: ${SPRING_MESSAGING_PASSWORD:folio-pass}
 
 application:
   caching:
     spring:
-      cacheTTL: 43200000 # 12 hours -> 12 x 3600 x 1000 = 43200000
+      cacheTTL: 43200000
 
 management:
   endpoints:
