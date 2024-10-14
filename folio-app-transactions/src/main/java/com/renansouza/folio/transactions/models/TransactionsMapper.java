@@ -19,14 +19,14 @@ public class TransactionsMapper {
         return entity;
     }
 
-    public static TransactionsAccountNotification entityToDto(TransactionsOperation operation, TransactionsEntity entity) {
+    public static AccountsNotification entityToDto(TransactionsOperation operation, TransactionsEntity entity) {
         var total = entity.getPrice().multiply(BigDecimal.valueOf(entity.getQuantity()));
         var totalWithFee = TransactionType.BUY.equals(entity.getType()) ? total.add(entity.getFee()) : total.subtract(entity.getFee());
         var amount = shouldNegateTotal(entity.getType(), operation)
                 ? totalWithFee.multiply(BigDecimal.valueOf(-1))
                 : totalWithFee;
 
-        return new TransactionsAccountNotification(entity.getBroker(), amount);
+        return new AccountsNotification(entity.getBroker(), amount);
     }
 
     private static boolean shouldNegateTotal(TransactionType type, TransactionsOperation operation) {

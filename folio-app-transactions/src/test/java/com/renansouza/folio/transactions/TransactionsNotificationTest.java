@@ -1,6 +1,7 @@
 package com.renansouza.folio.transactions;
 
 import com.renansouza.folio.transactions.config.RabbitMQConfig;
+import com.renansouza.folio.transactions.models.AccountsNotification;
 import com.renansouza.folio.transactions.models.TransactionsMapper;
 import com.renansouza.folio.transactions.models.TransactionsOperation;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
-import static com.renansouza.folio.transactions.TransactionsUtils.NOTIFICATION_FORMAT;
 import static com.renansouza.folio.transactions.TransactionsUtils.getAmount;
 import static com.renansouza.folio.transactions.TransactionsUtils.getEntities;
 import static org.mockito.Mockito.verify;
@@ -48,7 +48,7 @@ class TransactionsNotificationTest {
         transactionsNotification.sendAccountQueueMessage(TransactionsMapper.entityToDto(operation, entity));
 
         // Assert
-        var expectedMessage = NOTIFICATION_FORMAT.formatted(entity.getBroker(), amount);
+        var expectedMessage = new AccountsNotification(entity.getBroker(), amount);
         verify(rabbitTemplate).convertAndSend(EXCHANGE, ROUTING_KEY, expectedMessage);
     }
 
@@ -63,7 +63,7 @@ class TransactionsNotificationTest {
         transactionsNotification.sendAccountQueueMessage(TransactionsMapper.entityToDto(operation, entity));
 
         // Assert
-        var expectedMessage = NOTIFICATION_FORMAT.formatted(entity.getBroker(), amount);
+        var expectedMessage = new AccountsNotification(entity.getBroker(), amount);
         verify(rabbitTemplate).convertAndSend(EXCHANGE, ROUTING_KEY, expectedMessage);
     }
 
