@@ -3,7 +3,7 @@ package com.renansouza.folio.transactions;
 import java.util.Optional;
 
 import com.renansouza.folio.transactions.exceptions.TransactionNotFoundException;
-import com.renansouza.folio.transactions.models.TransactionsAccountNotification;
+import com.renansouza.folio.transactions.models.AccountsNotification;
 import com.renansouza.folio.transactions.models.TransactionsEntity;
 import com.renansouza.folio.transactions.models.TransactionsMapper;
 import com.renansouza.folio.transactions.models.TransactionsResponse;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 })
 class TransactionsServiceTest {
 
-    public static final int LIST_SIZE = 10;
+    private static final int LIST_SIZE = 10;
     private static final PageRequest PAGE_REQUEST = PageRequest.of(0, LIST_SIZE);
     private static final VerificationMode ONCE = times(1);
 
@@ -108,7 +108,7 @@ class TransactionsServiceTest {
 
         // Assert
         verify(repository, ONCE).save(any(TransactionsEntity.class));
-        verify(notification, ONCE).sendAccountQueueMessage(any(TransactionsAccountNotification.class));
+        verify(notification, ONCE).sendAccountQueueMessage(any(AccountsNotification.class));
 
     }
 
@@ -123,7 +123,7 @@ class TransactionsServiceTest {
 
         verify(repository, ONCE).findById(entity.getId());
         verify(repository, ONCE).delete(any(TransactionsEntity.class));
-        verify(notification, ONCE).sendAccountQueueMessage(any(TransactionsAccountNotification.class));
+        verify(notification, ONCE).sendAccountQueueMessage(any(AccountsNotification.class));
     }
 
     @Test
@@ -135,7 +135,7 @@ class TransactionsServiceTest {
         assertThrows(TransactionNotFoundException.class, () -> service.delete(1L));
         verify(repository, ONCE).findById(anyLong());
         verify(repository, never()).delete(any(TransactionsEntity.class));
-        verify(notification, never()).sendAccountQueueMessage(any(TransactionsAccountNotification.class));
+        verify(notification, never()).sendAccountQueueMessage(any(AccountsNotification.class));
     }
   
 }

@@ -45,6 +45,4 @@ public class TransactionsService {
         notification.sendAccountQueueMessage(TransactionsMapper.entityToDto(TransactionsOperation.DELETE, transaction));
     }
 
-
-
 }

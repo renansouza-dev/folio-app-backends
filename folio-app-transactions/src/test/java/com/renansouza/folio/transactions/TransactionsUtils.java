@@ -15,11 +15,11 @@ import org.instancio.Instancio;
 import static org.instancio.Select.all;
 import static org.instancio.Select.field;
 
-public class TransactionsUtils {
+class TransactionsUtils {
 
     private TransactionsUtils() {}
 
-    public static List<TransactionsEntity> getEntities(int size) {
+    static List<TransactionsEntity> getEntities(int size) {
         return Instancio.ofList(TransactionsEntity.class).size(size)
                 .ignore(field(TransactionsEntity::getId))
                 .generate(field(TransactionsEntity::getAsset), assetSpecProvider)
@@ -31,7 +31,7 @@ public class TransactionsUtils {
                 .create();
     }
 
-    public static List<TransactionsRequest> getRequests(int size) {
+    static List<TransactionsRequest> getRequests(int size) {
 
         return Instancio.ofList(TransactionsRequest.class).size(size)
                 .generate(field(TransactionsRequest::asset), assetSpecProvider)
@@ -40,7 +40,7 @@ public class TransactionsUtils {
                 .create();
     }
 
-    public static List<TransactionsResponse> getResponses(int size) {
+    static List<TransactionsResponse> getResponses(int size) {
 
         return Instancio.ofList(TransactionsResponse.class).size(size)
                 .generate(field(TransactionsResponse::asset), assetSpecProvider)
@@ -49,13 +49,11 @@ public class TransactionsUtils {
                 .create();
     }
 
-    public static String getFailureRequest() {
+    static String getFailureRequest() {
         return "{ \"type\": \"BUY\", \"asset\": \"ASSE11\", \"price\": 1139.74, \"quantity\": 4544, \"fee\": 9327.76, \"broker\": \"BROKER C\" }";
     }
 
-    public static final String NOTIFICATION_FORMAT = "{\"account\":\"%s\",\"amount\":%s}";
-
-    public static BigDecimal getAmount(TransactionsEntity entity, TransactionsOperation operation) {
+    static BigDecimal getAmount(TransactionsEntity entity, TransactionsOperation operation) {
         var total = entity.getPrice().multiply(BigDecimal.valueOf(entity.getQuantity()));
         var totalWithFee = TransactionType.BUY.equals(entity.getType()) ? total.add(entity.getFee()) : total.subtract(entity.getFee());
         return shouldNegateTotal(entity.getType(), operation)

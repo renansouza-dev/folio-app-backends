@@ -1,5 +1,6 @@
 package com.renansouza.folio.transactions;
 
+import com.renansouza.folio.transactions.models.AccountsNotification;
 import com.renansouza.folio.transactions.models.TransactionType;
 import com.renansouza.folio.transactions.models.TransactionsMapper;
 import com.renansouza.folio.transactions.models.TransactionsOperation;
@@ -28,7 +29,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 
-import static com.renansouza.folio.transactions.TransactionsUtils.NOTIFICATION_FORMAT;
 import static com.renansouza.folio.transactions.TransactionsUtils.getAmount;
 import static com.renansouza.folio.transactions.TransactionsUtils.getEntities;
 import static com.renansouza.folio.transactions.TransactionsUtils.getFailureRequest;
@@ -46,7 +46,7 @@ class TransactionsControllerIT {
     private static final String PATH = "/v1/transactions";
     private static final int PAGE_SIZE = 20;
     private static final int TOTAL_PAGES = 1;
-    private static final String QUEUE_NAME = "account";
+    private static final String QUEUE_NAME = "accounts";
 
     @LocalServerPort
     private Integer port;
@@ -194,8 +194,8 @@ class TransactionsControllerIT {
 
         var entity = TransactionsMapper.dtoToEntity(request);
         var amount = getAmount(entity, TransactionsOperation.SAVE);
-        var expectedMessage = NOTIFICATION_FORMAT.formatted(request.broker(), amount);
-        var actualMessage = (String) rabbitTemplate.receiveAndConvert(QUEUE_NAME);
+        var expectedMessage = new AccountsNotification(request.broker(), amount);
+        var actualMessage = rabbitTemplate.receiveAndConvert(QUEUE_NAME);
 
         // Then
         assertThat(actualMessage).isEqualTo(expectedMessage);
@@ -237,8 +237,8 @@ class TransactionsControllerIT {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
         var amount = getAmount(entity, TransactionsOperation.DELETE);
-        var expectedMessage = NOTIFICATION_FORMAT.formatted(entity.getBroker(), amount);
-        var actualMessage = (String) rabbitTemplate.receiveAndConvert(QUEUE_NAME);
+        var expectedMessage = new AccountsNotification(entity.getBroker(), amount);
+        var actualMessage = rabbitTemplate.receiveAndConvert(QUEUE_NAME);
 
         // Then
         assertThat(actualMessage).isEqualTo(expectedMessage);

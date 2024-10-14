@@ -5,6 +5,6 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record TransactionsAccountNotification(
+public record AccountsNotification(
         @JsonProperty("account") String account,
         @JsonProperty("amount") BigDecimal amount) implements Serializable {}
