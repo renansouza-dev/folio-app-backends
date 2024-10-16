@@ -7,5 +7,3 @@ CREATE TABLE accounts (
 );
 
 ALTER TABLE accounts ADD CONSTRAINT uc_accounts_broker UNIQUE (broker);
-
-INSERT INTO accounts (id, broker) values ('3f2794e5-f74a-46c4-9792-12308e740f97', 'C6 BANK');
