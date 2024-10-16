@@ -1,0 +1,16 @@
+@startuml
+queue Queue as RabbitMQ
+
+RabbitMQ -> AccountsListener: Message from queue
+activate AccountsListener
+
+AccountsListener -> AccountsService: getAccountUpdate(notification)
+activate AccountsService
+
+AccountsService -> AccountsRepository: save(notification)
+activate AccountsRepository
+
+
+deactivate AccountsService
+deactivate AccountsListener
+@enduml
