@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:16.3-alpine
+    container_name: postgres
+#    networks:
+#      - monitoring
+#      - transactions
+    ports:
+       - "5432:5432"
+    environment:
+      POSTGRES_USER: folio-user
+      POSTGRES_PASSWORD: folio-pass
+      POSTGRES_DB: folio-app-accounts
+
+  rabbitmq:
+    image: rabbitmq:4.0.2-management-alpine
+    container_name: rabbitmq
+    #    networks:
+    #      - monitoring
+    #      - transactions
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=folio-user
+      - RABBITMQ_DEFAULT_PASS=folio-pass
+
+  accounts:
+    image: renansouza-dev/folio-app-accounts
+    container_name: folio-app-accounts
+#      - monitoring
+#      - transactions
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+#    networks:
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/folio-app-accounts
+      - SPRING_DATASOURCE_USERNAME=folio-user
+      - SPRING_DATASOURCE_PASSWORD=folio-pass
+      - SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'  # Limit the container to use at most 50% of a CPU core
+          memory: '256M'  # Limit the container to use at most 256MB of memory
+
+#networks:
+#  transactions:
+#    driver: bridge
+#  monitoring:
+#    external: true
