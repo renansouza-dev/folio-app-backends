@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: folio-app-accounts
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/folio-app-accounts}
+    username: ${SPRING_DATASOURCE_USERNAME:folio-user}
+    password: ${SPRING_DATASOURCE_PASSWORD:folio-pass}
+  rabbitmq:
+    username: ${SPRING_MESSAGING_USERNAME:folio-user}
+    password: ${SPRING_MESSAGING_PASSWORD:folio-pass}
+
+application:
+  caching:
+    spring:
+      cacheTTL: 43200000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+server:
+  port: 8081

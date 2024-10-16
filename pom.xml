@@ -18,6 +18,7 @@
 	<description>Folio App Backends Services</description>
 
 	<modules>
+		<module>folio-app-accounts</module>
 		<module>folio-app-transactions</module>
 	</modules>
 
