@@ -6,7 +6,7 @@ CREATE TABLE transactions (
    price DECIMAL(9, 2) NOT NULL,
    quantity INTEGER NOT NULL,
    fee DECIMAL(9, 2) NOT NULL,
-   broker VARCHAR(10) NOT NULL,
+   broker UUID NOT NULL,
    deleted boolean NOT NULL DEFAULT FALSE,
    CONSTRAINT pk_transactions PRIMARY KEY (id)
 );
