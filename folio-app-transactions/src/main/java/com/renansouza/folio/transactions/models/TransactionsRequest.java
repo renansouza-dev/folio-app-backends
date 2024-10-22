@@ -2,6 +2,7 @@ package com.renansouza.folio.transactions.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -33,17 +34,16 @@ public record TransactionsRequest(
         BigDecimal fee,
 
         @NotNull(message = "Broker cannot be null.")
-        @Size(min = 5, max = 10, message = "Broker must have at least 5 and max 10 characters.")
-        String broker) {
+        UUID broker) {
 
-    public TransactionsRequest (LocalDate date, TransactionType type, String asset, BigDecimal price, int quantity, BigDecimal fee, String broker) {
+    public TransactionsRequest (LocalDate date, TransactionType type, String asset, BigDecimal price, int quantity, BigDecimal fee, UUID broker) {
         this.date = date;
         this.type = type;
         this.asset = asset.toUpperCase();
         this.price = price;
         this.quantity = quantity;
         this.fee = fee;
-        this.broker = broker.toUpperCase();
+        this.broker = broker;
     }
 
 }

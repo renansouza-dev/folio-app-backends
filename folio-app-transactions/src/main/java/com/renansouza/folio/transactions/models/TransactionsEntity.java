@@ -3,6 +3,7 @@ package com.renansouza.folio.transactions.models;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -64,9 +65,8 @@ public class TransactionsEntity {
     private BigDecimal fee;
 
     @NotNull
-    @Size(min = 5, max = 10)
-    @Column(nullable = false, length = 10)
-    private String broker;
+    @Column(nullable = false)
+    private UUID broker;
 
     @Override
     public boolean equals(Object o) {
