@@ -1,5 +1,7 @@
 package com.renansouza.folio.transactions;
 
+import java.util.UUID;
+
 import com.renansouza.folio.transactions.models.TransactionsEntity;
 import com.renansouza.folio.transactions.models.TransactionsResponse;
 import org.springframework.data.domain.Page;
@@ -20,9 +22,9 @@ public interface TransactionsRepository extends JpaRepository<TransactionsEntity
     Page<TransactionsResponse> findAllTransactions(Pageable pageable);
 
     @Query(QUERY + " WHERE t.broker = :broker")
-    Page<TransactionsResponse> findAllTransactionsByBroker(@Param("broker") String broker, Pageable pageable);
+    Page<TransactionsResponse> findAllTransactionsByBroker(@Param("broker") UUID broker, Pageable pageable);
 
     @Query(QUERY + " WHERE t.asset = :asset")
-    Page<TransactionsResponse> findAllTransactionsByAsset(@Param("asset")String asset, Pageable pageable);
+    Page<TransactionsResponse> findAllTransactionsByAsset(@Param("asset") String asset, Pageable pageable);
 
 }

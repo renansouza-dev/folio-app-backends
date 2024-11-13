@@ -54,8 +54,9 @@ class TransactionsServiceTest {
     @Test
     void testFindAllTransactionsByBroker() {
         // Arrange
-        var broker = "BROKER A";
-        var responses = getResponses(LIST_SIZE).stream().filter(t -> t.broker().equals(broker)).toList();
+        var responseList = getResponses(LIST_SIZE);
+        var broker = responseList.getFirst().broker();
+        var responses = responseList.stream().filter(t -> t.broker().equals(broker)).toList();
         when(repository.findAllTransactionsByBroker(broker, PAGE_REQUEST)).thenReturn(new PageImpl<>(responses));
 
         // Act

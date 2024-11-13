@@ -1,5 +1,7 @@
 package com.renansouza.folio.transactions;
 
+import java.util.UUID;
+
 import com.renansouza.folio.transactions.models.AccountsNotification;
 import com.renansouza.folio.transactions.models.TransactionType;
 import com.renansouza.folio.transactions.models.TransactionsMapper;
@@ -112,7 +114,7 @@ class TransactionsControllerIT {
         repository.saveAll(getEntities(5));
 
         given()
-                .param("broker", "BROKER")
+                .param("broker", UUID.randomUUID())
                 .contentType(ContentType.JSON)
                 .when()
                 .get(PATH)

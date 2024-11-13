@@ -21,9 +21,9 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    environment:
-      - RABBITMQ_DEFAULT_USER=folio-user
-      - RABBITMQ_DEFAULT_PASS=folio-pass
+    volumes:
+      - ./init/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./init/definitions.json:/etc/rabbitmq/definitions.json:ro
 
   transactions:
     image: renansouza-dev/folio-app-transactions
