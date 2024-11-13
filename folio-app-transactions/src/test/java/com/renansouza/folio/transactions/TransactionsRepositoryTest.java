@@ -2,6 +2,7 @@ package com.renansouza.folio.transactions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
@@ -115,7 +116,7 @@ class TransactionsRepositoryTest {
                                     .isExactlyInstanceOf(BigDecimal.class),
                             () -> assertThat(entity.getBroker())
                                     .isNotNull()
-                                    .isExactlyInstanceOf(String.class)
+                                    .isExactlyInstanceOf(UUID.class)
                     );
                 }
         ) ;

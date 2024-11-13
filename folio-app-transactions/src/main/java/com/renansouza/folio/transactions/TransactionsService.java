@@ -1,6 +1,7 @@
 package com.renansouza.folio.transactions;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import com.renansouza.folio.transactions.exceptions.TransactionNotFoundException;
 import com.renansouza.folio.transactions.models.TransactionsMapper;
@@ -20,7 +21,7 @@ public class TransactionsService {
     private final TransactionsRepository repository;
     private final TransactionsNotification notification;
 
-    Page<TransactionsResponse> find(String broker, String asset, PageRequest page) {
+    Page<TransactionsResponse> find(UUID broker, String asset, PageRequest page) {
         if (Objects.nonNull(broker)) {
             return repository.findAllTransactionsByBroker(broker, page);
         }

@@ -1,6 +1,7 @@
 package com.renansouza.folio.transactions;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.renansouza.folio.transactions.exceptions.TransactionNotFoundException;
@@ -75,12 +76,12 @@ class TransactionsControllerTest {
     @DisplayName("get zero transactions filtering by wrong broker.")
     void getZeroTransactionsByBroker() throws Exception {
         // Given
-        String broker = "BROKER";
+        var broker = UUID.randomUUID();
         var byBrokers = getResponses(10).stream().filter(transaction -> broker.equals(transaction.broker())).toList();
         when(service.find(eq(broker), any(), any(PageRequest.class))).thenReturn(new PageImpl<>(byBrokers));
 
         // Then
-        mvc.perform(get(PATH).param("broker", broker).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
+        mvc.perform(get(PATH).param("broker", String.valueOf(broker)).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
 
         // Verify that the repository was called with the correct arguments
         verify(service, ONCE).find(eq(broker), any(), any(PageRequest.class));
@@ -114,7 +115,7 @@ class TransactionsControllerTest {
         when(service.find(eq(broker), any(), any(PageRequest.class))).thenReturn(new PageImpl<>(byBrokers));
 
         // Then
-        mvc.perform(get(PATH).param("broker", broker).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        mvc.perform(get(PATH).param("broker", String.valueOf(broker)).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
         // Verify that the repository was called with the correct arguments
         verify(service, ONCE).find(eq(broker), any(), any(PageRequest.class));

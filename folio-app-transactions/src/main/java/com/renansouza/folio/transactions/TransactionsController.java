@@ -1,6 +1,7 @@
 package com.renansouza.folio.transactions;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import com.renansouza.folio.transactions.models.TransactionsRequest;
 import com.renansouza.folio.transactions.models.TransactionsResponse;
@@ -47,15 +48,15 @@ public class TransactionsController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Found a zero or more transactions",
+                    description = "Found a one or more transactions",
                     content = { @Content(schema = @Schema(implementation = TransactionsRequest[].class)) }),
             @ApiResponse(
                     responseCode = "204",
-                    description = "Found a zero transactions")
+                    description = "Found zero transactions")
     })
     @GetMapping
     @Cacheable(value = "transactionsCache", key = "#root.methodName + '_' + #asset + '_' + #broker + '_' + #pageSize + '_' + #pageNumber + '_' + #property + '_' + #direction")
-    ResponseEntity<Page<TransactionsResponse>> getTransactions(@RequestParam(required = false) String broker,
+    ResponseEntity<Page<TransactionsResponse>> getTransactions(@RequestParam(required = false) UUID broker,
                                                                @RequestParam(required = false) String asset,
                                                                @RequestParam(required = false, defaultValue = "20") String pageSize,
                                                                @RequestParam(required = false, defaultValue = "0") String pageNumber,

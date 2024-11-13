@@ -23,7 +23,6 @@ class TransactionsUtils {
         return Instancio.ofList(TransactionsEntity.class).size(size)
                 .ignore(field(TransactionsEntity::getId))
                 .generate(field(TransactionsEntity::getAsset), assetSpecProvider)
-                .generate(field(TransactionsEntity::getBroker), brokerSpecProvider)
                 .set(all(LocalDate.class), LocalDate.now())
                 .set(field(TransactionsEntity::getPrice), BigDecimal.ONE)
                 .set(field(TransactionsEntity::getQuantity), 1)
@@ -35,7 +34,6 @@ class TransactionsUtils {
 
         return Instancio.ofList(TransactionsRequest.class).size(size)
                 .generate(field(TransactionsRequest::asset), assetSpecProvider)
-                .generate(field(TransactionsRequest::broker), brokerSpecProvider)
                 .set(all(LocalDate.class), LocalDate.now())
                 .create();
     }
@@ -44,13 +42,12 @@ class TransactionsUtils {
 
         return Instancio.ofList(TransactionsResponse.class).size(size)
                 .generate(field(TransactionsResponse::asset), assetSpecProvider)
-                .generate(field(TransactionsResponse::broker), brokerSpecProvider)
                 .set(all(LocalDate.class), LocalDate.now())
                 .create();
     }
 
     static String getFailureRequest() {
-        return "{ \"type\": \"BUY\", \"asset\": \"ASSE11\", \"price\": 1139.74, \"quantity\": 4544, \"fee\": 9327.76, \"broker\": \"BROKER C\" }";
+        return "{ \"type\": \"BUY\", \"asset\": \"ASSE11\", \"price\": 1139.74, \"quantity\": 4544, \"fee\": 9327.76, \"broker\": \"9839a129-0b75-4eec-bc66-d7d98761950f\" }";
     }
 
     static BigDecimal getAmount(TransactionsEntity entity, TransactionsOperation operation) {
@@ -67,6 +64,5 @@ class TransactionsUtils {
     }
 
     private static final GeneratorSpecProvider<String> assetSpecProvider = gen -> gen.oneOf("ASSE1", "ASSE11");
-    private static final GeneratorSpecProvider<String> brokerSpecProvider = gen -> gen.oneOf("BROKER A", "BROKER B", "BROKER C");
 
 }
