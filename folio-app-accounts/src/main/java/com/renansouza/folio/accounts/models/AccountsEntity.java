@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.SoftDelete;
 
 @Entity
@@ -28,19 +29,12 @@ public class AccountsEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Setter
     @Column(nullable = false, unique = true, length = 100)
     private String broker;
 
+    @Setter
     @Column(nullable = false, precision = 9, scale = 2)
     private BigDecimal amount;
-
-    public AccountsEntity(String broker) {
-        this.broker = broker;
-    }
-
-    public AccountsEntity(String broker, BigDecimal amount) {
-        this.broker = broker;
-        this.amount = amount;
-    }
 
 }
