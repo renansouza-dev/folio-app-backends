@@ -1,7 +1,11 @@
 package com.renansouza.folio.accounts;
 
+import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
+import com.renansouza.folio.accounts.models.AccountsEntity;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -14,7 +18,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.springframework.amqp.rabbit.test.RabbitListenerTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -28,11 +34,8 @@ import static com.renansouza.folio.accounts.AccountUtils.getFailureRequest;
 import static io.restassured.RestAssured.given;
 
 @Tag("Integration")
-@RabbitListenerTest
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {
-        "spring.rabbitmq.listener.simple.auto-startup=false"
-})
+@TestPropertySource(properties = {"spring.rabbitmq.listener.simple.auto-startup=false"})
 class AccountsControllerIT {
 
     private static final String PATH = "/v1/accounts";
@@ -173,16 +176,28 @@ class AccountsControllerIT {
                         "page.size", Matchers.equalTo(PAGE_SIZE));
     }
 
-    @Test
+    private static Stream<Arguments> provideAccountsToUpdate() {
+        return Stream.of(
+                Arguments.of(getEntities(1).getFirst(), null, null),
+                Arguments.of(getEntities(1).getFirst(), "Another Broker", null),
+                Arguments.of(getEntities(1).getFirst(), null, BigDecimal.TEN)
+                );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideAccountsToUpdate")
     @DisplayName("should successfully update an account")
-    void updateAccount() {
-        var entity = repository.save(getEntities(1).getFirst());
+    void updateAccount(AccountsEntity entity, String broker, BigDecimal amount) {
+        var savedEntity = repository.save(entity);
+
+        broker = Objects.isNull(broker) ? savedEntity.getBroker() : broker;
+        amount = Objects.isNull(amount) ? savedEntity.getAmount() : amount;
 
         given()
-                .body(String.format("{ \"broker\": \"%s\", \"amount\": %s}", entity.getBroker(), entity.getAmount()))
+                .body(String.format("{ \"broker\": \"%s\", \"amount\": %s}", broker, amount))
                 .contentType(ContentType.JSON)
                 .when()
-                .put(PATH + "/{id}", entity.getId())
+                .put(PATH + "/{id}", savedEntity.getId())
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -190,7 +205,6 @@ class AccountsControllerIT {
     @Test
     @DisplayName("should fail to update an account")
     void failToUpdateAccount() {
-
         given()
                 .body("{ \"broker\": \"Broker A\", \"amount\": 0.00}")
                 .contentType(ContentType.JSON)

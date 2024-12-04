@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -33,12 +34,14 @@ public class TransactionsService {
         return repository.findAllTransactions(page);
     }
 
+    @Transactional
     void save(TransactionsRequest request) {
         var transaction = repository.save(TransactionsMapper.dtoToEntity(request));
 
         notification.sendAccountQueueMessage(TransactionsMapper.entityToDto(TransactionsOperation.SAVE, transaction));
     }
 
+    @Transactional
     void delete(Long id) {
         var transaction = repository.findById(id).orElseThrow(() -> new TransactionNotFoundException(id));
 
