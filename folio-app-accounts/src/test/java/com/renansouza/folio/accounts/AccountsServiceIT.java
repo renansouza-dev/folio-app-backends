@@ -3,12 +3,10 @@ package com.renansouza.folio.accounts;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.GetResponse;
 import com.renansouza.folio.accounts.models.AccountsNotification;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,7 +24,6 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.renansouza.folio.accounts.AccountUtils.getEntities;
 import static org.awaitility.Awaitility.await;
-import static org.awaitility.Awaitility.with;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
