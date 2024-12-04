@@ -14,7 +14,6 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +27,6 @@ public class AccountsService {
                 : repository.findByBroker(broker, page);
     }
 
-    @Transactional
     void save(AccountsRequest request) {
         if (repository.existsByBroker(request.broker())) {
             throw new AccountAlreadyExistsException(request.broker());
@@ -37,7 +35,6 @@ public class AccountsService {
         repository.save(AccountsMapper.dtoToEntity(request));
     }
 
-    @Transactional
     void updateAccountAmount(AccountsNotification notification) {
         if (!repository.existsById(notification.account())) {
             throw new AccountNotFoundException(notification.account());
@@ -46,7 +43,6 @@ public class AccountsService {
         repository.updateAmountById(notification.account(), notification.amount());
     }
 
-    @Transactional
     void update(UUID id, @Valid AccountsRequest request) {
         var account = repository.findById(id);
         if (account.isEmpty()) {

@@ -3,9 +3,12 @@ package com.renansouza.folio.accounts;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.GetResponse;
 import com.renansouza.folio.accounts.models.AccountsNotification;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,6 +25,8 @@ import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.renansouza.folio.accounts.AccountUtils.getEntities;
+import static org.awaitility.Awaitility.await;
+import static org.awaitility.Awaitility.with;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -37,10 +42,17 @@ class AccountsServiceIT {
     @Autowired
     AccountsRepository repository;
 
+    private static final ConnectionFactory factory = new ConnectionFactory();
+
     @BeforeAll
     static void beforeAll() {
         postgres.start();
         rabbit.start();
+
+        factory.setHost(rabbit.getHost());
+        factory.setPort(rabbit.getFirstMappedPort());
+        factory.setUsername(rabbit.getAdminUsername());
+        factory.setPassword(rabbit.getAdminPassword());
 
         try {
             rabbit.execInContainer("bash", "-c", "rabbitmqadmin declare queue name=%s durable=true".formatted(QUEUE_NAME));
@@ -79,7 +91,7 @@ class AccountsServiceIT {
 
         sendMessage(entity.getId());
 
-        Thread.sleep(5 * 1000);
+        await().atMost(1, TimeUnit.SECONDS).until(this::isMessageConsumed);
 
         var updatedEntity = repository.findById(entity.getId());
 
@@ -90,12 +102,6 @@ class AccountsServiceIT {
     }
 
     private static void sendMessage(UUID brokerId) {
-        var factory = new ConnectionFactory();
-        factory.setHost(rabbit.getHost());
-        factory.setPort(rabbit.getFirstMappedPort());
-        factory.setUsername(rabbit.getAdminUsername());
-        factory.setPassword(rabbit.getAdminPassword());
-
         try (var connection = factory.newConnection();
              var channel = connection.createChannel()) {
 
@@ -103,6 +109,16 @@ class AccountsServiceIT {
             var message = new ObjectMapper().writeValueAsString(notification);
 
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+        } catch (IOException | TimeoutException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean isMessageConsumed() {
+        try (var connection = factory.newConnection();
+             var channel = connection.createChannel()) {
+
+            return channel.basicGet(QUEUE_NAME, false) == null;
         } catch (IOException | TimeoutException e) {
             throw new RuntimeException(e);
         }
