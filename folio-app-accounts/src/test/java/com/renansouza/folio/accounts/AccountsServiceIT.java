@@ -83,7 +83,7 @@ class AccountsServiceIT {
 
     @Test
     @DisplayName("update account amount after message posted on queue")
-    void updateAccountAmount() throws InterruptedException {
+    void updateAccountAmount() {
         var entity = repository.save(getEntities(1).getFirst());
 
         sendMessage(entity.getId());
