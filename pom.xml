@@ -28,7 +28,7 @@
     <springdoc-openapi>2.6.0</springdoc-openapi>
     <instancio-junit.version>5.0.2</instancio-junit.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
-    <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+    <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
   </properties>
 
   <dependencyManagement>
