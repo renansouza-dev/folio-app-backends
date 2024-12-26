@@ -7,12 +7,14 @@ import com.renansouza.folio.accounts.models.AccountsRequest;
 import com.renansouza.folio.accounts.models.AccountsResponse;
 import org.instancio.Instancio;
 
+import static org.instancio.Select.field;
+
 class AccountUtils {
 
     private AccountUtils() {}
 
     static List<AccountsEntity> getEntities(int size) {
-        return Instancio.ofList(AccountsEntity.class).size(size).create();
+        return Instancio.ofList(AccountsEntity.class).size(size).ignore(field(AccountsEntity::getId)).create();
     }
 
     static List<AccountsResponse> getResponses(int size) {
