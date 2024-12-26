@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.ConnectionFactory;
-import com.renansouza.folio.accounts.models.AccountsEntity;
 import com.renansouza.folio.accounts.models.AccountsNotification;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
