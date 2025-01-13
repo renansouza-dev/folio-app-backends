@@ -28,6 +28,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import static com.renansouza.folio.accounts.AccountUtils.getEntities;
 import static com.renansouza.folio.accounts.AccountUtils.getFailureRequest;
@@ -45,6 +46,7 @@ class AccountsControllerIT {
     @LocalServerPort
     private Integer port;
 
+    @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16.3-alpine");
 
     @BeforeAll

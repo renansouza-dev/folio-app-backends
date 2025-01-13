@@ -84,18 +84,18 @@ class AccountsServiceIT {
     @Test
     @DisplayName("update account amount after message posted on queue")
     void updateAccountAmount() {
-        var entity = repository.save(getEntities(1).getFirst());
+        var savedEntity = repository.save(getEntities(1).getFirst());
 
-        sendMessage(entity.getId());
+        sendMessage(savedEntity.getId());
 
         await().atMost(1, TimeUnit.SECONDS).until(this::isMessageConsumed);
 
-        var updatedEntity = repository.findById(entity.getId());
+        var updatedEntity = repository.findById(savedEntity.getId());
 
         assertTrue(updatedEntity.isPresent());
-        assertEquals(updatedEntity.get().getId(), entity.getId());
-        assertEquals(updatedEntity.get().getBroker(), entity.getBroker());
-        assertEquals(updatedEntity.get().getAmount(), entity.getAmount().add(BigDecimal.TEN));
+        assertEquals(updatedEntity.get().getId(), savedEntity.getId());
+        assertEquals(updatedEntity.get().getBroker(), savedEntity.getBroker());
+        assertEquals(updatedEntity.get().getAmount(), savedEntity.getAmount().add(BigDecimal.TEN));
     }
 
     private static void sendMessage(UUID brokerId) {
