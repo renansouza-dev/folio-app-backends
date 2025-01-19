@@ -32,7 +32,7 @@ jobs:
     needs: detect-changes
     strategy:
       matrix:
-        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+        package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
     steps:
       - name: Print JSON in Raw Format
         run: |
