@@ -1,0 +1,31 @@
+name: Build and Push Docker Images to Github Registry
+
+on:
+  push:
+    branches: [ "release" ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-and-cache.yml
+
+  unit-test:
+    needs: build
+    uses: ./.github/workflows/unit-test.yml
+
+  integration-test:
+    needs: build
+    uses: ./.github/workflows/integration-test.yml
+
+  code-analysis:
+    needs: [unit-test, integration-test]
+    uses: ./.github/workflows/code-analysis.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build-publish:
+    needs: code-analysis
+    uses: ./.github/workflows/build-and-push.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
