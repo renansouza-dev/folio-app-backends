@@ -22,7 +22,10 @@ jobs:
       packages: write
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0 # Clona todo o histórico do repositório
 
       - name: Set up JDK ${{ inputs.java-version }}
         uses: actions/setup-java@v4.4.0
@@ -54,28 +57,30 @@ jobs:
         run: |
           echo "changed_modules=" >> $GITHUB_ENV
           for module in folio-app-accounts folio-app-transactions; do
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "^$module/"; then
-           echo "Module $module has changed."
-           echo "changed_modules=${module} $changed_modules" >> $GITHUB_ENV
-          fi
+            if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "^folio-app-backends/$module/"; then
+              echo "Module $module has changed."
+              echo "changed_modules=${module} $changed_modules" >> $GITHUB_ENV
+            fi
           done
 
-      - name: Build and Push folio-app-accounts
+      - name: Build and Push folio-app-accounts Docker Image
         if: contains(env.changed_modules, 'folio-app-accounts')
         run: |
           docker build \
             -t ghcr.io/${{ github.repository }}/folio-app-accounts:release-${{ github.run_number }} \
             -t ghcr.io/${{ github.repository }}/folio-app-accounts:latest \
-            folio-app-accounts
+            --build-arg JAR_FILE=folio-app-backends/folio-app-accounts/target/*.jar \
+            folio-app-backends/folio-app-accounts
           docker push ghcr.io/${{ github.repository }}/folio-app-accounts:release-${{ github.run_number }}
           docker push ghcr.io/${{ github.repository }}/folio-app-accounts:latest
 
-      - name: Build and Push folio-app-transactions
+      - name: Build and Push folio-app-transactions Docker Image
         if: contains(env.changed_modules, 'folio-app-transactions')
         run: |
           docker build \
             -t ghcr.io/${{ github.repository }}/folio-app-transactions:release-${{ github.run_number }} \
             -t ghcr.io/${{ github.repository }}/folio-app-transactions:latest \
-            folio-app-transactions
+            --build-arg JAR_FILE=folio-app-backends/folio-app-transactions/target/*.jar \
+            folio-app-backends/folio-app-transactions
           docker push ghcr.io/${{ github.repository }}/folio-app-transactions:release-${{ github.run_number }}
           docker push ghcr.io/${{ github.repository }}/folio-app-transactions:latest
