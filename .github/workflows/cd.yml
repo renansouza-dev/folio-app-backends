@@ -2,7 +2,7 @@ name: Build and Push Docker Images to Github Registry
 
 on:
   push:
-    branches: [ "release" ]
+    branches: [ "develop", "release" ]
   pull_request:
     types: [ opened, synchronize, reopened ]
 
