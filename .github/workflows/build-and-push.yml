@@ -13,74 +13,30 @@ on:
         type: string
 
 jobs:
-  build-and-push:
-    name: Build and Push Images
+  detect-changes:
     runs-on: ubuntu-latest
-
     permissions:
-      contents: read
-      packages: write
+      pull-requests: read
+
+    outputs:
+      packages: ${{ steps.filter.outputs.changes }}
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.2.2
+      - uses: dorny/paths-filter@v3
+        id: filter
         with:
-          fetch-depth: 0 # Clona todo o histórico do repositório
+          filters: |
+            accounts: folio-app-accounts/**
+            transactions: folio-app-transactions/**
 
-      - name: Set up JDK ${{ inputs.java-version }}
-        uses: actions/setup-java@v4.4.0
-        with:
-          java-version: ${{ inputs.java-version }}
-          distribution: ${{ inputs.java-distro }}
-          cache: maven
-
-      - name: Restore Maven cache
-        uses: actions/cache@v4.2.0
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.8.0
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3.3.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Detect Changes
-        id: changes
+  build:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    strategy:
+      matrix:
+        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+    steps:
+      - name: Print JSON in Raw Format
         run: |
-          echo "changed_modules=" >> $GITHUB_ENV
-          for module in folio-app-accounts folio-app-transactions; do
-            if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "^folio-app-backends/$module/"; then
-              echo "Module $module has changed."
-              echo "changed_modules=${module} $changed_modules" >> $GITHUB_ENV
-            fi
-          done
-
-      - name: Build and Push folio-app-accounts Docker Image
-        if: contains(env.changed_modules, 'folio-app-accounts')
-        run: |
-          docker build \
-            -t ghcr.io/${{ github.repository }}/folio-app-accounts:release-${{ github.run_number }} \
-            -t ghcr.io/${{ github.repository }}/folio-app-accounts:latest \
-            --build-arg JAR_FILE=folio-app-backends/folio-app-accounts/target/*.jar \
-            folio-app-backends/folio-app-accounts
-          docker push ghcr.io/${{ github.repository }}/folio-app-accounts:release-${{ github.run_number }}
-          docker push ghcr.io/${{ github.repository }}/folio-app-accounts:latest
-
-      - name: Build and Push folio-app-transactions Docker Image
-        if: contains(env.changed_modules, 'folio-app-transactions')
-        run: |
-          docker build \
-            -t ghcr.io/${{ github.repository }}/folio-app-transactions:release-${{ github.run_number }} \
-            -t ghcr.io/${{ github.repository }}/folio-app-transactions:latest \
-            --build-arg JAR_FILE=folio-app-backends/folio-app-transactions/target/*.jar \
-            folio-app-backends/folio-app-transactions
-          docker push ghcr.io/${{ github.repository }}/folio-app-transactions:release-${{ github.run_number }}
-          docker push ghcr.io/${{ github.repository }}/folio-app-transactions:latest
+          echo "Raw JSON Output:"
+          echo '${{ needs.changes.outputs.packages }}' | jq
