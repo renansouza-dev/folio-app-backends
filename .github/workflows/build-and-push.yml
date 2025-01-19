@@ -11,10 +11,6 @@ on:
         description: 'Java version to use'
         default: '21'
         type: string
-      secrets:
-        SONAR_TOKEN:
-          description: 'SonarCloud authentication token'
-          required: true
 
 jobs:
   build-and-push:
