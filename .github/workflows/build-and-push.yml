@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: Build, Test and Push Docker Images
 
 on:
   workflow_call:
@@ -11,10 +11,16 @@ on:
         description: 'Java version to use'
         default: '21'
         type: string
+    push:
+      branches:
+        - release
+    pull_request:
+      branches:
+        - release
 
 jobs:
   build-and-push:
-    name: Build and Push Images
+    name: Build, Test, and Push Docker Images
     runs-on: ubuntu-latest
 
     permissions:
@@ -22,7 +28,10 @@ jobs:
       packages: write
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0 # Clona todo o histórico do repositório
 
       - name: Set up JDK ${{ inputs.java-version }}
         uses: actions/setup-java@v4.4.0
@@ -66,16 +75,18 @@ jobs:
           docker build \
             -t ghcr.io/${{ github.repository }}/folio-app-accounts:release-${{ github.run_number }} \
             -t ghcr.io/${{ github.repository }}/folio-app-accounts:latest \
-            folio-app-accounts
+            --build-arg JAR_FILE=folio-app-backends/folio-app-accounts/target/*.jar \
+            folio-app-backends/folio-app-accounts
           docker push ghcr.io/${{ github.repository }}/folio-app-accounts:release-${{ github.run_number }}
           docker push ghcr.io/${{ github.repository }}/folio-app-accounts:latest
 
-      - name: Build and Push folio-app-transactions
+      - name: Build and Push folio-app-transactions Docker Image
         if: contains(env.changed_modules, 'folio-app-transactions')
         run: |
           docker build \
             -t ghcr.io/${{ github.repository }}/folio-app-transactions:release-${{ github.run_number }} \
             -t ghcr.io/${{ github.repository }}/folio-app-transactions:latest \
-            folio-app-transactions
+            --build-arg JAR_FILE=folio-app-backends/folio-app-transactions/target/*.jar \
+            folio-app-backends/folio-app-transactions
           docker push ghcr.io/${{ github.repository }}/folio-app-transactions:release-${{ github.run_number }}
           docker push ghcr.io/${{ github.repository }}/folio-app-transactions:latest
