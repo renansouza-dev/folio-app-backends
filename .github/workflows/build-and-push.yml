@@ -61,7 +61,7 @@ jobs:
 
       - name: List files in target directory
         run: |
-          ls -la target/
+          ls -la
 
 #      - name: Set up Docker Buildx
 #        uses: docker/setup-buildx-action@v3.8.0
