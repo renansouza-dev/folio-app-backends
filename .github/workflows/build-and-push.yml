@@ -55,7 +55,7 @@ jobs:
       - name: Extract Version from pom.xml
         id: extract-version
         run: |
-          VERSION=$(xmllint --xpath "string(//project/version)" folio-app-${{ matrix.module }}/pom.xml)
+          VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.module }}/pom.xml)
           CLEAN_VERSION=${VERSION%-SNAPSHOT}
           echo "version=$CLEAN_VERSION" >> $GITHUB_ENV
 
