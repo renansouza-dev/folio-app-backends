@@ -59,6 +59,16 @@ jobs:
           CLEAN_VERSION=${VERSION%-SNAPSHOT}
           echo "version=$CLEAN_VERSION" >> $GITHUB_ENV
 
+      - name: Find JAR File
+        id: find-jar
+        run: |
+          JAR_FILE=$(find . -type f -name "folio-app-${{ matrix.package }}-*.jar" | head -n 1)
+          echo "jar_file=$JAR_FILE" >> $GITHUB_ENV
+
+      - name: Print JAR File Path
+        run: |
+          echo "Found JAR file: ${{ env.jar_file }}"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.8.0
 
