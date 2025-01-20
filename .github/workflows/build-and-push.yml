@@ -74,6 +74,6 @@ jobs:
           docker build \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:${{ env.version }} \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest \
-            folio-app/${{ matrix.package }}
+            folio-app-${{ matrix.package }}
           docker push ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:${{ env.version }}
           docker push ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest
