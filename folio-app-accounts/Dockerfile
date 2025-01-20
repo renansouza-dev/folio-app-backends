@@ -18,6 +18,6 @@ FROM alpine:3.21.2
 COPY --from=build  /springboot-runtime /opt/jdk
 ENV PATH=$PATH:/opt/jdk/bin
 EXPOSE 8080
-RUN ls -la
+RUN ls -la /var/lib/docker/tmp/buildkit-*
 COPY ../target/folio-app-accounts-*.jar /opt/app/folio-app-accounts.jar
 CMD ["java", "-showversion", "-jar", "/opt/app/folio-app-accounts.jar"]
