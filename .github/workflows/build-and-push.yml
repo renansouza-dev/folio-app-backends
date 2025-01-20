@@ -60,7 +60,7 @@ jobs:
           echo "version=$CLEAN_VERSION" >> $GITHUB_ENV
 
       - name: Display Version
-        run: echo "The version of the project is ${{ env.CLEAN_VERSION }}"
+        run: echo "The version of the project is ${{ env.version }}"
 
 #      - name: Set up Docker Buildx
 #        uses: docker/setup-buildx-action@v3.8.0
