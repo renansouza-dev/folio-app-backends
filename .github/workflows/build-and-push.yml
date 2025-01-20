@@ -37,14 +37,27 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
 
+      - name: Set up JDK ${{ inputs.java-version }}
+        uses: actions/setup-java@v4.4.0
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: ${{ inputs.java-distro }}
+          cache: maven
+
+      - name: Restore Maven cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
       - name: Extract Version from pom.xml
         id: extract-version
         run: |
           VERSION=$(xmllint --xpath "string(//project/version)" folio-app-${{ matrix.module }}/pom.xml)
           CLEAN_VERSION=${VERSION%-SNAPSHOT}
           echo "version=$CLEAN_VERSION" >> $GITHUB_ENV
-
-# TODO: recover build from previus steps with actions/cache@v4.2.0
 
 #      - name: Set up Docker Buildx
 #        uses: docker/setup-buildx-action@v3.8.0
