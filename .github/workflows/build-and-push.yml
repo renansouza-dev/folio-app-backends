@@ -27,7 +27,7 @@ jobs:
             accounts: folio-app-accounts/**
             transactions: folio-app-transactions/**
 
-  build:
+  publish:
     runs-on: ubuntu-latest
     needs: detect-changes
     strategy:
@@ -80,7 +80,7 @@ jobs:
 
   security-check:
     runs-on: ubuntu-latest
-    needs: [detect-changes, build]
+    needs: [detect-changes, publish]
     strategy:
       matrix:
         package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
@@ -94,3 +94,5 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+          env:
+            TRIVY_DISABLE_VEX_NOTICE: true
