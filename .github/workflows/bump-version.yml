@@ -52,17 +52,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Extract Version from pom.xml
-        id: extract-version
-        run: |
-          VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml)
-          CLEAN_VERSION=${VERSION%-SNAPSHOT}
-          echo "version=$CLEAN_VERSION" >> $GITHUB_ENV
-
       - name: Update module to new version
         id: new-version
         run: |
-          version=${{ env.version }}
-          IFS='.' read -r major minor patch <<< "version"
-          minor=$((minor + 1))
-          echo "mvn -B versions:set -DnewVersion=$major.$minor.$patch-SNAPSHOT" -DgenerateBackupPoms=false -B -ntp -f folio-app-${{ matrix.package }}/pom.xml" >> $GITHUB_ENV
+          mvn -B versions:set -DnextSnapshot=true -DgenerateBackupPoms=false -B -ntp -f folio-app-${{ matrix.package }}/pom.xml
