@@ -13,11 +13,11 @@ jobs:
 #  unit-test:
 #    needs: build
 #    uses: ./.github/workflows/unit-test.yml
-#
+
 #  integration-test:
 #    needs: build
 #    uses: ./.github/workflows/integration-test.yml
-#
+
 #  code-analysis:
 #    needs: [unit-test, integration-test]
 #    uses: ./.github/workflows/code-analysis.yml
@@ -25,5 +25,5 @@ jobs:
 #      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build-publish:
-#    needs: code-analysis
+    needs: build
     uses: ./.github/workflows/build-and-push.yml
