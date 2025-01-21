@@ -58,7 +58,6 @@ jobs:
           VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml)
           CLEAN_VERSION=${VERSION%-SNAPSHOT}
           echo "version=$CLEAN_VERSION" >> $GITHUB_ENV
-
       - name: Update module to new version
         id: new-version
         run: |
