@@ -62,9 +62,7 @@ jobs:
       - name: Update module to new version
         id: new-version
         run: |
-          ls -la
-          cd folio-app-${{ matrix.package }}
           version=${{ env.version }}
           IFS='.' read -r major minor patch <<< "version"
           minor=$((minor + 1))
-          echo "mvn -B versions:set -DnewVersion=$major.$minor.$patch-SNAPSHOT" -DgenerateBackupPoms=false -B -ntp" >> $GITHUB_ENV
+          echo "mvn -B versions:set -DnewVersion=$major.$minor.$patch-SNAPSHOT" -DgenerateBackupPoms=false -B -ntp -f folio-app-${{ matrix.package }}/pom.xml" >> $GITHUB_ENV
