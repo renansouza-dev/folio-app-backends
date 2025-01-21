@@ -29,5 +29,5 @@ jobs:
 #    uses: ./.github/workflows/build-and-push.yml
 
   bump-version:
-    need: build
+    needs: build
     uses: ./.github/workflows/bump-version.yml
