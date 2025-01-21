@@ -7,9 +7,9 @@ on:
     types: [ opened, synchronize, reopened ]
 
 jobs:
-#  build:
-#    uses: ./.github/workflows/build-and-cache.yml
-#
+  build:
+    uses: ./.github/workflows/build-and-cache.yml
+
 #  unit-test:
 #    needs: build
 #    uses: ./.github/workflows/unit-test.yml
