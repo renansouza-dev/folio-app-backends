@@ -27,7 +27,7 @@ jobs:
             accounts: folio-app-accounts/**
             transactions: folio-app-transactions/**
 
-  get-current-version:
+  build:
     runs-on: ubuntu-latest
     needs: detect-changes
     strategy:
@@ -52,15 +52,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-  build-image:
-    runs-on: ubuntu-latest
-    needs: [detect-changes, get-current-version]
-    outputs:
-      images: ${{ steps.filter.outputs.images }}
-    strategy:
-      matrix:
-        package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
-    steps:
+      - name: Extract Version from pom.xml
+        id: extract-version
+        run: |
+          VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml)
+          CLEAN_VERSION=${VERSION%-SNAPSHOT}
+          echo "version=$CLEAN_VERSION" >> $GITHUB_ENV
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.8.0
 
@@ -71,15 +69,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Version from pom.xml
-        id: extract-version
-        run: |
-          VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml)
-          CLEAN_VERSION=${VERSION%-SNAPSHOT}
-          echo "version=$CLEAN_VERSION" >> $GITHUB_ENV
-
       - name: Build and Push Docker Image
-        id: filter
         run: |
           docker build \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:${{ env.version }} \
@@ -88,20 +78,17 @@ jobs:
           docker push ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:${{ env.version }}
           docker push ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest
 
-  security-checks:
+  security-check:
     runs-on: ubuntu-latest
-    needs: build-image
+    needs: [detect-changes, build]
     strategy:
       matrix:
-        image: ${{ fromJSON(needs.build-image.outputs.images) }}
+        package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
-
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: 'ghcr.io/${{ github.repository }}/folio-app-${{ matrix.image }}:${{ env.version }}'
+          image-ref: 'ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
