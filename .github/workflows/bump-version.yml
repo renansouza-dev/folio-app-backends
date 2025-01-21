@@ -58,6 +58,7 @@ jobs:
           VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml)
           CLEAN_VERSION=${VERSION%-SNAPSHOT}
           echo "version=$CLEAN_VERSION" >> $GITHUB_ENV
+
       - name: Update module to new version
         id: new-version
         run: |
@@ -66,5 +67,4 @@ jobs:
           version=${{ env.version }}
           IFS='.' read -r major minor patch <<< "version"
           minor=$((minor + 1))
-#          mvn -B versions:set -DnewVersion=$major.$minor.$patch-SNAPSHOT" -DgenerateBackupPoms=false -B -ntp
           echo "mvn -B versions:set -DnewVersion=$major.$minor.$patch-SNAPSHOT" -DgenerateBackupPoms=false -B -ntp" >> $GITHUB_ENV
