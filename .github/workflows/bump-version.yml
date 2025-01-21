@@ -1,0 +1,35 @@
+name: Bump project version
+
+on:
+  workflow_call:
+    inputs:
+      java-distro:
+        description: 'Java flavor to use'
+        default: 'temurin'
+        type: string
+      java-version:
+        description: 'Java version to use'
+        default: '21'
+        type: string
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      packages: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            accounts: folio-app-accounts/**
+            transactions: folio-app-transactions/**
+            
+  
+
+  bump:
+    # TODO: do magic here
+    # 1. bump updated modules
+    # 2. commit changes
