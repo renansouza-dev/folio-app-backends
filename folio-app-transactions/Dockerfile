@@ -18,5 +18,5 @@ FROM alpine:3.21.2
 COPY --from=build  /springboot-runtime /opt/jdk
 ENV PATH=$PATH:/opt/jdk/bin
 EXPOSE 8080
-COPY target/folio-app-transactions-*.jar /opt/app/folio-app-transactions.jar
+COPY folio-app-transactions/target/folio-app-transactions-*.jar /opt/app/folio-app-transactions.jar
 CMD ["java", "-showversion", "-jar", "/opt/app/folio-app-transactions.jar"]
