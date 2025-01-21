@@ -56,3 +56,4 @@ jobs:
         id: new-version
         run: |
           mvn -B versions:set -DnextSnapshot=true -DgenerateBackupPoms=false -B -ntp -f folio-app-${{ matrix.package }}/pom.xml
+          git status
