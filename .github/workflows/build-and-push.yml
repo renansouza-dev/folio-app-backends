@@ -26,7 +26,7 @@ jobs:
           filters: |
             accounts: folio-app-accounts/**
             transactions: folio-app-transactions/**
-            
+
   publish:
     runs-on: ubuntu-latest
     needs: detect-changes
