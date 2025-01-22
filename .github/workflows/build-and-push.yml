@@ -57,8 +57,8 @@ jobs:
       - name: Apply and Extract version from pom.xml
         id: extract-version
         run: |
-          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false -f folio-app-${{ matrix.package }}/pom.xml
-          VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml)
+          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false -f folio-app-${{ matrix.package }}/pom.xml -ntp
+          version=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml -ntp)
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.8.0
