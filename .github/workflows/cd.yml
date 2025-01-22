@@ -24,10 +24,10 @@ jobs:
 #    secrets:
 #      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-#  build-publish:
-#    needs: build
-#    uses: ./.github/workflows/build-and-push.yml
-
-  bump-version:
+  build-publish:
     needs: build
-    uses: ./.github/workflows/bump-version.yml
+    uses: ./.github/workflows/build-and-push.yml
+
+#  bump-version:
+#    needs: build
+#    uses: ./.github/workflows/bump-version.yml
