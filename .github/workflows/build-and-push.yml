@@ -110,6 +110,14 @@ jobs:
           distribution: ${{ inputs.java-distro }}
           cache: maven
 
+      - name: Restore Maven cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
       - name: Push Docker Image
         run: |
           VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml -ntp)
