@@ -103,6 +103,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up JDK ${{ inputs.java-version }}
+        uses: actions/setup-java@v4.4.0
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: ${{ inputs.java-distro }}
+          cache: maven
+
       - name: Push Docker Image
         run: |
           VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml -ntp)
