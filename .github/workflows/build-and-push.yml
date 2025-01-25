@@ -67,8 +67,6 @@ jobs:
         run: |
           VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml -ntp)
           docker buildx build \
-            --cache-from=type=local,src=/tmp/.buildx-cache \
-            --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:$VERSION \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest \
             folio-app-${{ matrix.package }}
@@ -80,18 +78,6 @@ jobs:
       matrix:
         package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
     steps:
-      - name: Restore Docker Cache
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-docker-${{ github.sha }}
-          fail-on-cache-miss: true
-          restore-keys: |
-            ${{ runner.os }}-docker-
-
-      - name: Print Docker Cache folder
-        run: ls -la /tmp/.buildx-cache
-
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
         with:
