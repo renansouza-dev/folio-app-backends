@@ -90,7 +90,7 @@ jobs:
 
   push-images:
     runs-on: ubuntu-latest
-    needs: [ security-checks ]
+    needs: [detect-changes, security-checks]
     if: success()
     strategy:
       matrix:
