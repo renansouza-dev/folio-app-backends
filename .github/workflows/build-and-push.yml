@@ -85,8 +85,12 @@ jobs:
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-docker-${{ github.sha }}
+          fail-on-cache-miss: true
           restore-keys: |
             ${{ runner.os }}-docker-
+
+      - name: Print Docker Cache folder
+        run: ls -la /tmp/.buildx-cache
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
