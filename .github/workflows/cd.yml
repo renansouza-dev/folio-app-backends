@@ -28,6 +28,6 @@ jobs:
     needs: build
     uses: ./.github/workflows/build-and-push.yml
 
-#  bump-version:
-#    needs: build
-#    uses: ./.github/workflows/bump-version.yml
+  bump-version:
+    needs: build-publish
+    uses: ./.github/workflows/bump-version.yml
