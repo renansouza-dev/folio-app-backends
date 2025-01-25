@@ -26,34 +26,32 @@ jobs:
           filters: |
             accounts: folio-app-accounts/**
             transactions: folio-app-transactions/**
-            
-  bump:
+
+  update-branches:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     needs: detect-changes
     strategy:
       matrix:
+        branch: [develop, release]
         package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.2.2
-
-      - name: Set up JDK ${{ inputs.java-version }}
-        uses: actions/setup-java@v4.4.0
-        with:
-          java-version: ${{ inputs.java-version }}
-          distribution: ${{ inputs.java-distro }}
-          cache: maven
-
-      - name: Restore Maven cache
-        uses: actions/cache@v4.2.0
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Update module to new version
-        id: new-version
-        run: |
-          mvn -B versions:set -DnextSnapshot=true -DgenerateBackupPoms=false -B -ntp -f folio-app-${{ matrix.package }}/pom.xml
-          git status
+      - name: Checkout repo
+        run: echo "::name::${GITHUB_STEP_NAME}"
+      - name: Setup java
+        run: echo "::name::${GITHUB_STEP_NAME}"
+      - name: Restore from cache
+        run: echo "::name::${GITHUB_STEP_NAME}"
+      - name: Bump version
+        run: echo "::name::${GITHUB_STEP_NAME}"
+      - name: Setup java
+        run: echo "::name::${GITHUB_STEP_NAME}"
+      - name: Configure Git
+        run: echo "::name::${GITHUB_STEP_NAME}"
+      - name: Create a new branch
+        run: echo "::name::${GITHUB_STEP_NAME}"
+      - name: Commit changes
+        run: echo "::name::${GITHUB_STEP_NAME}"
+      - name: Push to remote
+        run: echo "::name::${GITHUB_STEP_NAME}"
