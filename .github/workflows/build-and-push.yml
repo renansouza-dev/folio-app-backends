@@ -67,10 +67,13 @@ jobs:
         id: docker-build
         run: |
           VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml -ntp)
+          echo "Extracted Version: $VERSION"
           docker buildx build \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:$VERSION \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest \
             folio-app-${{ matrix.package }}
+        env:
+          VERSION: ${{ env.VERSION }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
@@ -91,6 +94,5 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml -ntp)
-          docker push ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:$VERSION
+          docker push ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:${{ steps.docker-build.outputs.version }}
           docker push ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest
