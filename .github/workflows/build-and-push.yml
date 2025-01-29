@@ -79,7 +79,7 @@ jobs:
         id: docker-build
         run: |
           docker buildx build \
-            -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:${{ steps.extract-version.outputs.version }}" \
+            -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:${{ steps.extract-version.outputs.version }} \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest \
             folio-app-${{ matrix.package }}
 
