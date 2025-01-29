@@ -33,6 +33,8 @@ jobs:
     strategy:
       matrix:
         package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
+    outputs:
+      image_tag: ${{ steps.docker-build.outputs.image_tag }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4.2.2
@@ -64,12 +66,15 @@ jobs:
             ${{ runner.os }}-docker-
 
       - name: Build Docker Image
+        id: docker-build
         run: |
           VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml -ntp)
           docker buildx build \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:$VERSION \
             -t ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest \
             folio-app-${{ matrix.package }}
+          IMAGE_TAG=ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:${{ steps.get-version.outputs.version }}
+          echo "::set-output name=image_tag::$IMAGE_TAG"
 
   security-checks:
     runs-on: ubuntu-latest
@@ -90,11 +95,10 @@ jobs:
 
   push-images:
     runs-on: ubuntu-latest
-    needs: [detect-changes, security-checks]
-    if: success()
+    needs: build-image
     strategy:
       matrix:
-        package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
+        package: ${{ fromJSON(needs.build-image.outputs.image_tag) }}
     steps:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3.3.0
@@ -103,23 +107,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up JDK ${{ inputs.java-version }}
-        uses: actions/setup-java@v4.4.0
-        with:
-          java-version: ${{ inputs.java-version }}
-          distribution: ${{ inputs.java-distro }}
-          cache: maven
-
-      - name: Restore Maven cache
-        uses: actions/cache@v4.2.0
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
       - name: Push Docker Image
         run: |
-          VERSION=$(mvn help:evaluate -q -DforceStdout -D"expression=project.version" -f folio-app-${{ matrix.package }}/pom.xml -ntp)
-          docker push ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:$VERSION
-          docker push ghcr.io/${{ github.repository }}/folio-app-${{ matrix.package }}:latest
+          docker push ${{ matrix.package }}
+          docker push ${{ matrix.package }}
