@@ -7,8 +7,8 @@ on:
     types: [ opened, synchronize, reopened ]
 
 jobs:
-  build:
-    uses: ./.github/workflows/build-and-cache.yml
+#  build:
+#    uses: ./.github/workflows/build-and-cache.yml
 
 #  unit-test:
 #    needs: build
@@ -29,9 +29,9 @@ jobs:
 #    uses: ./.github/workflows/build-and-push.yml
 
   remove-snapshot:
-    needs: build
+#    needs: build-publish
     uses: ./.github/workflows/remove-snapshot.yml
 
   bump-version:
-    needs: build
+#    needs: build-publish
     uses: ./.github/workflows/bump-version.yml

@@ -48,7 +48,7 @@ jobs:
 
       - name: Update module to new version
         run: |
-          mvn -B versions:set -DnextSnapshot=true -DgenerateBackupPoms=false -B -ntp -f folio-app-${{ matrix.package }}/pom.xml
+          mvn -B versions:set -DnextSnapshot=true -DgenerateBackupPoms=false -B -ntp -f folio-app-${{ matrix.package }}/pom.xml -ntp -B
 
       - name: Configure Git
         run: |
@@ -57,6 +57,7 @@ jobs:
 
       - name: Commit changes
         run: |
+          git status
           git add .
           git commit -m "Bump to next snapshot on folio-app-${{ matrix.package }}/pom.xml"
 
