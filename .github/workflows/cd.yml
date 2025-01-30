@@ -24,10 +24,14 @@ jobs:
 #    secrets:
 #      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  build-publish:
+#  build-publish:
+#    needs: build
+#    uses: ./.github/workflows/build-and-push.yml
+
+  remove-snapshot:
     needs: build
-    uses: ./.github/workflows/build-and-push.yml
+    uses: ./.github/workflows/remove-snapshot.yml
 
   bump-version:
-    needs: build-publish
+    needs: build
     uses: ./.github/workflows/bump-version.yml

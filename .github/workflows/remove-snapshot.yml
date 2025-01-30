@@ -1,0 +1,41 @@
+name: Bump project version
+
+on:
+  workflow_call:
+    inputs:
+      java-distro:
+        description: 'Java flavor to use'
+        default: 'temurin'
+        type: string
+      java-version:
+        description: 'Java version to use'
+        default: '21'
+        type: string
+
+jobs:
+  update-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: Remove snapshot from pom.xml
+        run: |
+          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Remove -SNAPSHOT from pom.xml"
+
+      - name: Push changes to release branch
+        run: |
+          git checkout -b release
+          git push origin release

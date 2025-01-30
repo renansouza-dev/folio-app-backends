@@ -27,31 +27,40 @@ jobs:
             accounts: folio-app-accounts/**
             transactions: folio-app-transactions/**
 
-  update-branches:
+  bump:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
     needs: detect-changes
     strategy:
       matrix:
-        branch: [develop, release]
         package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
     steps:
-      - name: Checkout repo
-        run: echo "::name::${GITHUB_STEP_NAME}"
-      - name: Setup java
-        run: echo "::name::${GITHUB_STEP_NAME}"
-      - name: Restore from cache
-        run: echo "::name::${GITHUB_STEP_NAME}"
-      - name: Bump version
-        run: echo "::name::${GITHUB_STEP_NAME}"
-      - name: Setup java
-        run: echo "::name::${GITHUB_STEP_NAME}"
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: develop
+
+      - name: Set up JDK ${{ inputs.java-version }}
+        uses: actions/setup-java@v4.4.0
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: ${{ inputs.java-distro }}
+          cache: maven
+
+      - name: Update module to new version
+        run: |
+          mvn -B versions:set -DnextSnapshot=true -DgenerateBackupPoms=false -B -ntp -f folio-app-${{ matrix.package }}/pom.xml
+
       - name: Configure Git
-        run: echo "::name::${GITHUB_STEP_NAME}"
-      - name: Create a new branch
-        run: echo "::name::${GITHUB_STEP_NAME}"
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
       - name: Commit changes
-        run: echo "::name::${GITHUB_STEP_NAME}"
-      - name: Push to remote
-        run: echo "::name::${GITHUB_STEP_NAME}"
+        run: |
+          git add .
+          git commit -m "Bump to next snapshot on folio-app-${{ matrix.package }}/pom.xml"
+
+      - name: Push changes to release branch
+        run: |
+          git checkout -b develop
+          git push origin develop
