@@ -32,6 +32,6 @@ jobs:
 #    needs: build-publish
     uses: ./.github/workflows/remove-snapshot.yml
 
-  bump-version:
+#  bump-version:
 #    needs: build-publish
-    uses: ./.github/workflows/bump-version.yml
+#    uses: ./.github/workflows/bump-version.yml

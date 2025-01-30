@@ -32,10 +32,13 @@ jobs:
 
       - name: Commit changes
         run: |
+          git status
           git add .
           git commit -m "Remove -SNAPSHOT from pom.xml"
 
       - name: Push changes to release branch
         run: |
+          git fetch origin
           git checkout release
+          git merge develop
           git push origin release
