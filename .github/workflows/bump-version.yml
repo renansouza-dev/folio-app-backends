@@ -62,5 +62,5 @@ jobs:
 
       - name: Push changes to release branch
         run: |
-          git checkout -b develop
+          git checkout develop
           git push origin develop
