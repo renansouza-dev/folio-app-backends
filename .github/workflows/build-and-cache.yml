@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
+
       - name: Set up JDK ${{ inputs.java-version }}
         uses: actions/setup-java@v4.4.0
         with:
@@ -25,6 +26,7 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn -B compile -DskipTests=true --file pom.xml -ntp
+
       - name: Cache Maven dependencies
         uses: actions/cache@v4.2.0
         with:
