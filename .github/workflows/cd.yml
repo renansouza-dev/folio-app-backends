@@ -2,36 +2,28 @@ name: Build and Push Docker Images to Github Registry
 
 on:
   push:
-    branches: [ "develop", "release" ]
+    branches: [ "release" ]
   pull_request:
     types: [ opened, synchronize, reopened ]
 
 jobs:
-#  build:
-#    uses: ./.github/workflows/build-and-cache.yml
+  build:
+    uses: ./.github/workflows/build-and-cache.yml
 
-#  unit-test:
-#    needs: build
-#    uses: ./.github/workflows/unit-test.yml
+  unit-test:
+    needs: build
+    uses: ./.github/workflows/unit-test.yml
 
-#  integration-test:
-#    needs: build
-#    uses: ./.github/workflows/integration-test.yml
+  integration-test:
+    needs: build
+    uses: ./.github/workflows/integration-test.yml
 
-#  code-analysis:
-#    needs: [unit-test, integration-test]
-#    uses: ./.github/workflows/code-analysis.yml
-#    secrets:
-#      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  code-analysis:
+    needs: [unit-test, integration-test]
+    uses: ./.github/workflows/code-analysis.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-#  build-publish:
-#    needs: build
-#    uses: ./.github/workflows/build-and-push.yml
-
-  remove-snapshot:
-#    needs: build-publish
-    uses: ./.github/workflows/remove-snapshot.yml
-
-#  bump-version:
-#    needs: build-publish
-#    uses: ./.github/workflows/bump-version.yml
+  build-publish:
+    needs: build
+    uses: ./.github/workflows/build-and-push.yml
