@@ -19,7 +19,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           ref: develop
+
+      - name: Fetch release branch
+        run: |
+          git fetch origin release || echo "Branch release not found"
+          git checkout release || git checkout -b release origin/release
+
+      - name: Merge develop into release
+        run: |
+          git merge develop --allow-unrelated-histories || echo "No changes to merge"
 
       - name: Remove snapshot from pom.xml
         run: |
@@ -34,11 +44,8 @@ jobs:
         run: |
           git status
           git add .
-          git commit -m "Remove -SNAPSHOT from pom.xml"
+          git commit -m "Remove -SNAPSHOT from pom.xml" || echo "No changes to commit"
 
       - name: Push changes to release branch
         run: |
-          git fetch origin
-          git checkout release
-          git merge develop
           git push origin release
