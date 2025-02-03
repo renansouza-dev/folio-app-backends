@@ -1,5 +1,5 @@
 # (1)
-FROM alpine:3.20.3 AS build
+FROM alpine:3.21.2 AS build
 ENV JAVA_HOME=/opt/jdk/jdk-21.0.2+13
 ENV PATH=$JAVA_HOME/bin:$PATH
 
@@ -13,10 +13,10 @@ RUN tar -xzvf /opt/jdk/OpenJDK21U-jdk_x64_alpine-linux_hotspot_21.0.2_13.tar.gz 
           --output /springboot-runtime
 
 # (5)
-FROM alpine:3.20.3
+FROM alpine:3.21.2
 # (6)
 COPY --from=build  /springboot-runtime /opt/jdk
 ENV PATH=$PATH:/opt/jdk/bin
 EXPOSE 8080
-COPY ../target/folio-app-accounts-*.jar /opt/app/folio-app-accounts.jar
+COPY folio-app-accounts-*.jar /opt/app/folio-app-accounts.jar
 CMD ["java", "-showversion", "-jar", "/opt/app/folio-app-accounts.jar"]
