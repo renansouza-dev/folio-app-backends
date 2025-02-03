@@ -25,5 +25,5 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build-publish:
-    needs: code-analysis
+    needs: build
     uses: ./.github/workflows/build-and-push.yml
