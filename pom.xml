@@ -27,7 +27,7 @@
     <flyway.version>11.1.0</flyway.version>
     <springdoc-openapi>2.8.5</springdoc-openapi>
     <instancio-junit.version>5.4.0</instancio-junit.version>
-    <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
     <hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
   </properties>
 
