@@ -25,7 +25,7 @@
     <java.version>21</java.version>
     <lombok.version>1.18.38</lombok.version>
     <flyway.version>11.1.0</flyway.version>
-    <springdoc-openapi>2.8.8</springdoc-openapi>
+    <springdoc-openapi>2.8.9</springdoc-openapi>
     <instancio-junit.version>5.4.1</instancio-junit.version>
     <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
     <hibernate-validator.version>9.0.0.Final</hibernate-validator.version>
