@@ -1,4 +1,6 @@
 name: Build and Cache
+permissions:
+  contents: read
 
 on:
   workflow_call:
