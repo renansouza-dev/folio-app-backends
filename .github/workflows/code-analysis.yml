@@ -1,4 +1,6 @@
 name: Code Analysis
+permissions:
+  contents: read
 
 on:
   workflow_call:
