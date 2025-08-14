@@ -45,4 +45,4 @@ jobs:
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=renansouza-dev -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=renansouza-dev -Dsonar.projectKey=renansouza-dev_folio-app-backends
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar -Dsonar.organization=renansouza-dev
