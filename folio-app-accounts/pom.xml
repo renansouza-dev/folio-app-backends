@@ -5,8 +5,9 @@
 
     <parent>
         <groupId>com.renansouza</groupId>
-        <artifactId>folio-app-backends</artifactId>
+        <artifactId>folio-app-web</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../folio-app-web</relativePath>
     </parent>
 
     <artifactId>folio-app-accounts</artifactId>
