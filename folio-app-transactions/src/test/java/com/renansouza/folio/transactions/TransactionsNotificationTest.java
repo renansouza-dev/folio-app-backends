@@ -31,10 +31,11 @@ class TransactionsNotificationTest {
     private TransactionsNotification transactionsNotification;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        when(rabbitMQConfig.getExchangeName()).thenReturn(EXCHANGE);
-        when(rabbitMQConfig.getRoutingKey()).thenReturn(ROUTING_KEY);
+    void setUp() throws Exception {
+        try (AutoCloseable mocks = MockitoAnnotations.openMocks(this)) {
+            when(rabbitMQConfig.getExchangeName()).thenReturn(EXCHANGE);
+            when(rabbitMQConfig.getRoutingKey()).thenReturn(ROUTING_KEY);
+        }
     }
 
     @Test
