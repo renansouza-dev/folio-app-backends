@@ -1,1 +1,1 @@
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=renansouza-dev_folio-app-backends&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=renansouza-dev_folio-app-backends)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=com.renansouza%3Afolio-app-backends)](https://sonarcloud.io/summary/new_code?id=com.renansouza%3Afolio-app-backends)
