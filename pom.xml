@@ -34,7 +34,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <lombok.version>1.18.38</lombok.version>
-        <instancio-junit.version>5.5.0</instancio-junit.version>
+        <instancio-junit.version>5.5.1</instancio-junit.version>
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
     </properties>
 
