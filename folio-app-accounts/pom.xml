@@ -7,7 +7,7 @@
         <groupId>com.renansouza</groupId>
         <artifactId>folio-app-web</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../folio-app-web</relativePath>
+        <relativePath>../folio-app-web/pom.xml</relativePath>
     </parent>
 
     <artifactId>folio-app-accounts</artifactId>
