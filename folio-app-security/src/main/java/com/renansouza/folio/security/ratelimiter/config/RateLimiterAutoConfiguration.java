@@ -1,5 +1,7 @@
 package com.renansouza.folio.security.ratelimiter.config;
 
+import com.renansouza.folio.security.ratelimiter.core.RateLimiter;
+import com.renansouza.folio.security.ratelimiter.core.keyextractor.KeyExtractor;
 import com.renansouza.folio.security.ratelimiter.interceptor.RateLimiterInterceptor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -82,16 +84,22 @@ public class RateLimiterAutoConfiguration {
      * interceptor implementation if needed.
      * </p>
      *
-     * @return a new instance of {@link RateLimiterInterceptor} that implements rate limiting logic
+     * @param rateLimiter the rate limiting algorithm implementation that determines whether requests should be allowed or denied
+     * @param keyExtractor the strategy for extracting unique identifiers from HTTP requests (e.g., IP address, user ID, custom headers)
+     * @param rateLimiterProperties the configuration properties containing rate limiting settings such as limits, time windows, and algorithm-specific parameters
+     * @return a new instance of {@link RateLimiterInterceptor} configured with the provided dependencies
      * @see RateLimiterInterceptor
+     * @see RateLimiter
+     * @see KeyExtractor
+     * @see RateLimiterProperties
      * @see HandlerInterceptor
      * @see ConditionalOnMissingBean
      * @since 1.0.0
      */
     @Bean
     @ConditionalOnMissingBean
-    public HandlerInterceptor rateLimiterInterceptor() {
-        return new RateLimiterInterceptor();
+    public HandlerInterceptor rateLimiterInterceptor(RateLimiter rateLimiter, KeyExtractor keyExtractor, RateLimiterProperties rateLimiterProperties) {
+        return new RateLimiterInterceptor(rateLimiter, keyExtractor, rateLimiterProperties);
     }
 
     /**
@@ -109,6 +117,7 @@ public class RateLimiterAutoConfiguration {
      * @throws IllegalArgumentException if the interceptor parameter is null
      * @see WebMvcConfigurer#addInterceptors(InterceptorRegistry)
      * @see HandlerInterceptor
+     * @since 1.0.0
      */
     @Bean
     public WebMvcConfigurer webMvcConfigurer(HandlerInterceptor interceptor) {
