@@ -1,8 +1,16 @@
 package com.renansouza.folio.security.ratelimiter.interceptor;
 
+import com.renansouza.folio.security.ratelimiter.config.RateLimiterProperties;
+import com.renansouza.folio.security.ratelimiter.core.RateLimiter;
+import com.renansouza.folio.security.ratelimiter.core.keyextractor.KeyExtractor;
+import com.renansouza.folio.security.ratelimiter.exception.RateLimitExceededException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
@@ -34,7 +42,15 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @see HandlerInterceptor
  * @see org.springframework.web.servlet.config.annotation.InterceptorRegistry
  */
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public class RateLimiterInterceptor implements HandlerInterceptor {
+
+    private final RateLimiter rateLimiter;
+    private final KeyExtractor keyExtractor;
+    private final RateLimiterProperties rateLimiterProperties;
 
     /**
      * Intercepts HTTP requests before they are handled by controller methods to apply rate limiting.
@@ -65,7 +81,18 @@ public class RateLimiterInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
-        return true;
-    }
+        try {
+            if (!(handler instanceof HandlerMethod method) || !rateLimiterProperties.isEnabled()) return true;
 
+            String key = keyExtractor.extractKey(request);
+            if (!rateLimiter.allowed(key)) {
+                throw new RateLimitExceededException();
+            }
+
+            return true;
+        } catch (IllegalArgumentException e) {
+            log.warn("Failed to extract rate limit key: {}", e.getMessage());
+            return true;
+        }
+    }
 }
