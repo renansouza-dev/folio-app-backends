@@ -1,5 +1,6 @@
 package com.renansouza.folio.security.ratelimiter.config;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -10,6 +11,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@Tag("Unit")
 class RateLimiterPropertiesTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
