@@ -1,1 +1,0 @@
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=com.renansouza%3Afolio-app-backends)](https://sonarcloud.io/summary/new_code?id=com.renansouza%3Afolio-app-backends)
