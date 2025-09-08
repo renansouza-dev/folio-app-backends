@@ -18,12 +18,12 @@ Also implement a security library to enhance and address security concerns.
 
 ## Modules
 
-| Module Name              | Description                                                 |
-|--------------------------|-------------------------------------------------------------|
-| `folio-app-accounts`     | Handles exchange user accounts                              |
-| `folio-app-security`     | Manages authentication, authorization, and related services |
-| `folio-app-transactions` | Processes and records transactional exchange operations     |
-| `folio-app-web`          | Parent pom project for web apis                             |
+| Module Name              | Description                                                          |
+|--------------------------|----------------------------------------------------------------------|
+| `folio-app-web`          | Parent pom project for web apis                                      |
+| `folio-app-accounts`     | Web API that handles exchange user accounts                          |
+| `folio-app-transactions` | Web API that processes and records transactional exchange operations |
+| `folio-app-security`     | Manages authentication, authorization, and related services          |
 
 
 ---
