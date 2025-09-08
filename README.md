@@ -1,7 +1,6 @@
 # folio-app-backends
 
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=com.renansouza%3Afolio-app-backends)](https://sonarcloud.io/summary/new_code?id=com.renansouza%3Afolio-app-backends)
-![License](https://img.shields.io/github/license/renansouza-dev/folio-app-backends)
 
 A modular, micro-service-inspired backend suite for the **Folio App**, built with Java and Maven. It includes modules for account management and trade transactions.
 Also implement a security library to enhance and address security concerns.
