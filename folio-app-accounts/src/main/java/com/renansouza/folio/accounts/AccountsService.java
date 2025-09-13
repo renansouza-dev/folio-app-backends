@@ -1,7 +1,5 @@
 package com.renansouza.folio.accounts;
 
-import java.util.UUID;
-
 import com.renansouza.folio.accounts.exceptions.AccountAlreadyExistsException;
 import com.renansouza.folio.accounts.exceptions.AccountNotFoundException;
 import com.renansouza.folio.accounts.models.AccountsMapper;
@@ -14,6 +12,8 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

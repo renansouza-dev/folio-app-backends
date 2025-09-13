@@ -1,7 +1,5 @@
 package com.renansouza.folio.transactions;
 
-import java.util.Optional;
-
 import com.renansouza.folio.transactions.exceptions.TransactionNotFoundException;
 import com.renansouza.folio.transactions.models.AccountsNotification;
 import com.renansouza.folio.transactions.models.TransactionsEntity;
@@ -17,17 +15,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestPropertySource;
 
-import static com.renansouza.folio.transactions.TransactionsUtils.getEntities;
-import static com.renansouza.folio.transactions.TransactionsUtils.getRequests;
-import static com.renansouza.folio.transactions.TransactionsUtils.getResponses;
+import java.util.Optional;
+
+import static com.renansouza.folio.transactions.TransactionsUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @TestPropertySource(properties = {

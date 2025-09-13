@@ -1,11 +1,11 @@
 package com.renansouza.folio.accounts;
 
-import java.util.List;
-
 import com.renansouza.folio.accounts.models.AccountsEntity;
 import com.renansouza.folio.accounts.models.AccountsRequest;
 import com.renansouza.folio.accounts.models.AccountsResponse;
 import org.instancio.Instancio;
+
+import java.util.List;
 
 import static org.instancio.Select.field;
 

@@ -1,8 +1,8 @@
 package com.renansouza.folio.accounts.exceptions;
 
-import java.util.UUID;
-
 import jakarta.validation.constraints.NotBlank;
+
+import java.util.UUID;
 
 public class AccountNotFoundException extends RuntimeException {
 

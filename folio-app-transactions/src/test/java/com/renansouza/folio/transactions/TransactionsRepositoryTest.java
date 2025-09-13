@@ -1,9 +1,5 @@
 package com.renansouza.folio.transactions;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.UUID;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -15,6 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.UUID;
 
 import static com.renansouza.folio.transactions.TransactionsUtils.getEntities;
 import static org.assertj.core.api.Assertions.assertThat;

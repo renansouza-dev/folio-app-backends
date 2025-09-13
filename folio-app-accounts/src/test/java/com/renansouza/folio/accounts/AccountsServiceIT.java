@@ -1,19 +1,8 @@
 package com.renansouza.folio.accounts;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import com.rabbitmq.client.ConnectionFactory;
 import com.renansouza.folio.accounts.models.AccountsNotification;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -21,6 +10,12 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.renansouza.folio.accounts.AccountUtils.getEntities;
 import static org.awaitility.Awaitility.await;

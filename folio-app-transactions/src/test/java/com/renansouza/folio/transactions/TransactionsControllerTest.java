@@ -1,8 +1,5 @@
 package com.renansouza.folio.transactions;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.renansouza.folio.transactions.exceptions.TransactionNotFoundException;
 import com.renansouza.folio.transactions.models.TransactionsRequest;
@@ -21,25 +18,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.renansouza.folio.transactions.TransactionsUtils.getFailureRequest;
-import static com.renansouza.folio.transactions.TransactionsUtils.getRequests;
-import static com.renansouza.folio.transactions.TransactionsUtils.getResponses;
+import java.util.List;
+import java.util.UUID;
+
+import static com.renansouza.folio.transactions.TransactionsUtils.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
