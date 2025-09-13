@@ -1,8 +1,5 @@
 package com.renansouza.folio.accounts;
 
-import java.math.BigDecimal;
-import java.util.UUID;
-
 import com.renansouza.folio.accounts.models.AccountsNotification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -10,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

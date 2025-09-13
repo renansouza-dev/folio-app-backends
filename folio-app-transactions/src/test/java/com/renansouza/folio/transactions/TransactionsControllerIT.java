@@ -1,7 +1,5 @@
 package com.renansouza.folio.transactions;
 
-import java.util.UUID;
-
 import com.renansouza.folio.transactions.models.AccountsNotification;
 import com.renansouza.folio.transactions.models.TransactionType;
 import com.renansouza.folio.transactions.models.TransactionsMapper;
@@ -12,13 +10,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -31,10 +23,9 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 
-import static com.renansouza.folio.transactions.TransactionsUtils.getAmount;
-import static com.renansouza.folio.transactions.TransactionsUtils.getEntities;
-import static com.renansouza.folio.transactions.TransactionsUtils.getFailureRequest;
-import static com.renansouza.folio.transactions.TransactionsUtils.getRequests;
+import java.util.UUID;
+
+import static com.renansouza.folio.transactions.TransactionsUtils.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.hasSize;

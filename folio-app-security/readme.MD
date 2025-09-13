@@ -6,7 +6,7 @@ Supports multiple algorithms, pluggable storage backends, and both **YAML config
 ---
 
 ## ✨ Features
-- ✅ Algorithms: **Fixed Window**, **Token Bucket**, **GCRA**
+- ✅ Algorithms: **Fixed Window**, **Token Bucket**, **Sliding Window**, **Sliding Bucket**
 - ✅ Storage: **In-Memory** (local JVM) and **Redis** (distributed)
 - ✅ Configurable via `application.yaml`
 - ✅ Fine-grained rules using `@RateLimit` annotation
@@ -54,7 +54,7 @@ rate-limiter:
 ```
 
 | Property           | Type      | Description                                                                          |
-| ------------------ | --------- |--------------------------------------------------------------------------------------|
+|--------------------|-----------|--------------------------------------------------------------------------------------|
 | `enabled`          | boolean   | Enables or disables rate limiting globally.                                          |
 | `key`              | string    | Key used for identifying requests (`ip`, `user`, or custom).                         |
 | `algorithm`        | enum      | Default algorithm: `FIXED_WINDOW`, `TOKEN_BUCKET`, `SLIDING_WINDOW`, `LEAKY_BUCKET`. |
@@ -82,7 +82,7 @@ public class OrderController {
 ```
 
 | Parameter   | Type      | Default       | Description              |
-| ----------- | --------- | ------------- | ------------------------ |
+|-------------|-----------|---------------|--------------------------|
 | `limit`     | int       | —             | Max requests allowed.    |
 | `duration`  | int (sec) | —             | Time window.             |
 | `algorithm` | enum      | FIXED\_WINDOW | Rate limiting algorithm. |

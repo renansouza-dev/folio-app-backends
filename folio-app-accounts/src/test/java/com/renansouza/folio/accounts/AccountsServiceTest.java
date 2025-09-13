@@ -1,10 +1,5 @@
 package com.renansouza.folio.accounts;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
-
 import com.renansouza.folio.accounts.exceptions.AccountAlreadyExistsException;
 import com.renansouza.folio.accounts.exceptions.AccountNotFoundException;
 import com.renansouza.folio.accounts.models.AccountsEntity;
@@ -23,18 +18,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-import static com.renansouza.folio.accounts.AccountUtils.getEntities;
-import static com.renansouza.folio.accounts.AccountUtils.getRequests;
-import static com.renansouza.folio.accounts.AccountUtils.getResponses;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.renansouza.folio.accounts.AccountUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @Tag("Unit")
 class AccountsServiceTest {

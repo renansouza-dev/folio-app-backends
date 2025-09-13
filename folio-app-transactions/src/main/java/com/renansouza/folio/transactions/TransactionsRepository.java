@@ -1,7 +1,5 @@
 package com.renansouza.folio.transactions;
 
-import java.util.UUID;
-
 import com.renansouza.folio.transactions.models.TransactionsEntity;
 import com.renansouza.folio.transactions.models.TransactionsResponse;
 import org.springframework.data.domain.Page;
@@ -10,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
 
 @Repository
 public interface TransactionsRepository extends JpaRepository<TransactionsEntity, Long> {

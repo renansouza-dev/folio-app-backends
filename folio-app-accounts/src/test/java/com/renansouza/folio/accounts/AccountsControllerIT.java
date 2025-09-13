@@ -1,10 +1,5 @@
 package com.renansouza.folio.accounts;
 
-import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Stream;
-
 import com.renansouza.folio.accounts.models.AccountsEntity;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -12,12 +7,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -29,6 +19,11 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+
+import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 import static com.renansouza.folio.accounts.AccountUtils.getEntities;
 import static com.renansouza.folio.accounts.AccountUtils.getFailureRequest;

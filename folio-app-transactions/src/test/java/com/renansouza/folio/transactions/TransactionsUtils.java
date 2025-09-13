@@ -1,16 +1,12 @@
 package com.renansouza.folio.transactions;
 
+import com.renansouza.folio.transactions.models.*;
+import org.instancio.GeneratorSpecProvider;
+import org.instancio.Instancio;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-
-import com.renansouza.folio.transactions.models.TransactionType;
-import com.renansouza.folio.transactions.models.TransactionsEntity;
-import com.renansouza.folio.transactions.models.TransactionsOperation;
-import com.renansouza.folio.transactions.models.TransactionsRequest;
-import com.renansouza.folio.transactions.models.TransactionsResponse;
-import org.instancio.GeneratorSpecProvider;
-import org.instancio.Instancio;
 
 import static org.instancio.Select.all;
 import static org.instancio.Select.field;
