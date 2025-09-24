@@ -41,6 +41,6 @@ Also implement a security library to enhance and address security concerns.
 
 ### Prerequisites
 
-- Java JDK 21+ (or your project's targeted Java version)
+- Java JDK 25+ (or your project's targeted Java version)
 - Maven (or use the provided Maven Wrapper)
 - Docker & Docker Compose (if using Docker configuration)

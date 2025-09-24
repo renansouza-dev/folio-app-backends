@@ -1,18 +1,27 @@
 package com.renansouza.folio.transactions.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import org.hibernate.annotations.SoftDelete;
-import org.hibernate.proxy.HibernateProxy;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Generated;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Setter
@@ -24,59 +33,63 @@ import java.util.UUID;
 @Table(name = "transactions")
 public class TransactionsEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(nullable = false)
+  private long id;
 
-    @PastOrPresent
-    @Column(nullable = false)
-    private LocalDate date;
+  @PastOrPresent
+  @Column(nullable = false)
+  private LocalDate date;
 
-    @Enumerated
-    @Column(columnDefinition = "smallint")
-    private TransactionType type;
+  @Enumerated
+  @Column(columnDefinition = "smallint")
+  private TransactionType type;
 
-    @NotNull
-    @Size(min = 5, max = 6)
-    @Column(nullable = false, length = 6)
-    private String asset;
+  @NotNull
+  @Size(min = 5, max = 6)
+  @Column(nullable = false, length = 6)
+  private String asset;
 
-    @PositiveOrZero
-    @Column(nullable = false, precision = 9, scale = 2)
-    private BigDecimal price;
+  @PositiveOrZero
+  @Column(nullable = false, precision = 9, scale = 2)
+  private BigDecimal price;
 
-    @PositiveOrZero
-    @Column(nullable = false)
-    private int quantity;
+  @PositiveOrZero
+  @Column(nullable = false)
+  private int quantity;
 
-    @PositiveOrZero
-    @Column(nullable = false, precision = 9, scale = 2)
-    private BigDecimal fee;
+  @PositiveOrZero
+  @Column(nullable = false, precision = 9, scale = 2)
+  private BigDecimal fee;
 
-    @NotNull
-    @Column(nullable = false)
-    private UUID broker;
+  @NotNull
+  @Column(nullable = false)
+  private UUID broker;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TransactionsEntity that)) return false;
-        return quantity == that.quantity
-                && Objects.equals(id, that.id)
-                && Objects.equals(date, that.date)
-                && type == that.type
-                && Objects.equals(asset, that.asset)
-                && Objects.equals(price, that.price)
-                && Objects.equals(fee, that.fee)
-                && Objects.equals(broker, that.broker);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy hibernateProxy
-                ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass().hashCode()
-                : getClass().hashCode();
+    if (!(o instanceof TransactionsEntity that)) {
+      return false;
     }
+    return quantity == that.quantity
+        && Objects.equals(id, that.id)
+        && Objects.equals(date, that.date)
+        && type == that.type
+        && Objects.equals(asset, that.asset)
+        && Objects.equals(price, that.price)
+        && Objects.equals(fee, that.fee)
+        && Objects.equals(broker, that.broker);
+  }
+
+  @Override
+  public final int hashCode() {
+    return this instanceof HibernateProxy hibernateProxy
+        ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass().hashCode()
+        : getClass().hashCode();
+  }
 
 }

@@ -7,9 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public interface KeyExtractor {
 
-    /**
-     * Extract unique key from request for rate limiting
-     */
-    String extractKey(HttpServletRequest request);
+  /**
+   * Extract unique key from request for rate limiting
+   */
+  String extractKey(HttpServletRequest request);
 
 }

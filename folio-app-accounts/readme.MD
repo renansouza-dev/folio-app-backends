@@ -4,7 +4,7 @@
 > This MS has the purpose of managing the account (by broker) balance. It will leverage the benefits of using RabbitMQ to read messages from others MS. The development for this MS has been divided into phases to make the delivering of value be more frequent. The phase one had the focus of reading from the queue and updated a created account balance and a second phase that will provide a broader subset of capabilities levering restful apis for it.
 
 ## Tech Stack
-* [Java 21](https://adoptium.net/temurin/releases/)
+* [Java 25](https://adoptium.net/temurin/releases/)
 * [Spring Boot](https://spring.io/)
 * [RabbitMQ](http://www.rabbitmq.com/)
 * [Test Containers](https://testcontainers.com/)
