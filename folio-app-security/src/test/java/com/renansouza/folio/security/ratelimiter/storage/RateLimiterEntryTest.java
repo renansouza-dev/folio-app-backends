@@ -76,7 +76,7 @@ class RateLimiterEntryTest {
       // Wait for expiration
       try {
         Thread.sleep(10);
-      } catch (InterruptedException e) {
+      } catch (InterruptedException _) {
         Thread.currentThread().interrupt();
       }
 
@@ -90,11 +90,13 @@ class RateLimiterEntryTest {
 
     @Test
     void set_shouldThrowExceptionWhenParametersAreNull() {
-      assertThrows(IllegalArgumentException.class,
-          () -> storage.set(null, 1L, Duration.ofMinutes(1)));
-      assertThrows(IllegalArgumentException.class,
-          () -> storage.set("key", null, Duration.ofMinutes(1)));
-      assertThrows(IllegalArgumentException.class, () -> storage.set("key", 1L, null));
+      String key = "key";
+      Long value = 1L;
+      Duration duration = Duration.ofMinutes(1);
+
+      assertThrows(IllegalArgumentException.class, () -> storage.set(null, value, duration));
+      assertThrows(IllegalArgumentException.class, () -> storage.set(key, null, duration));
+      assertThrows(IllegalArgumentException.class, () -> storage.set(key, value, null));
     }
 
     @Test
@@ -116,11 +118,13 @@ class RateLimiterEntryTest {
 
     @Test
     void increment_shouldThrowExceptionWhenParametersAreNull() {
-      assertThrows(IllegalArgumentException.class,
-          () -> storage.increment(null, 1L, Duration.ofMinutes(1)));
-      assertThrows(IllegalArgumentException.class,
-          () -> storage.increment("key", null, Duration.ofMinutes(1)));
-      assertThrows(IllegalArgumentException.class, () -> storage.increment("key", 1L, null));
+      String key = "key";
+      Long value = 1L;
+      Duration duration = Duration.ofMinutes(1);
+
+      assertThrows(IllegalArgumentException.class, () -> storage.increment(null, value, duration));
+      assertThrows(IllegalArgumentException.class, () -> storage.increment(key, null, duration));
+      assertThrows(IllegalArgumentException.class, () -> storage.increment(key, value, null));
     }
 
     @Test
@@ -154,7 +158,7 @@ class RateLimiterEntryTest {
       // Wait for expiration
       try {
         Thread.sleep(10);
-      } catch (InterruptedException e) {
+      } catch (InterruptedException _) {
         Thread.currentThread().interrupt();
       }
 
@@ -246,7 +250,7 @@ class RateLimiterEntryTest {
       // Wait for expiration
       try {
         Thread.sleep(10);
-      } catch (InterruptedException e) {
+      } catch (InterruptedException _) {
         Thread.currentThread().interrupt();
       }
 
@@ -276,7 +280,7 @@ class RateLimiterEntryTest {
       // Wait for expiration
       try {
         Thread.sleep(10);
-      } catch (InterruptedException e) {
+      } catch (InterruptedException _) {
         Thread.currentThread().interrupt();
       }
 
