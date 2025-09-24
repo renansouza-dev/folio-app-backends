@@ -5,10 +5,11 @@ package com.renansouza.folio.security.ratelimiter.core;
  */
 public interface RateLimiter {
 
-    /**
-     * Check if request should be allowed or not
-     * @param key - unique identifier for rate limiting
-     * @return boolean with allow/deny decision
-     */
-    boolean allowed(String key);
+  /**
+   * Check if request should be allowed or not
+   *
+   * @param key - unique identifier for rate limiting
+   * @return boolean with allow/deny decision
+   */
+  boolean allowed(String key);
 }

@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 /**
  * Annotation to configure rate limiting on REST endpoints or entire controllers.
  * <p>
- * This annotation can be applied at both method and class levels to define rate limiting
- * rules for HTTP requests. When applied at the class level, the rate limiting configuration
- * applies to all methods within the class unless overridden by method-level annotations.
+ * This annotation can be applied at both method and class levels to define rate limiting rules for
+ * HTTP requests. When applied at the class level, the rate limiting configuration applies to all
+ * methods within the class unless overridden by method-level annotations.
  * </p>
  *
  * <h3>Usage Examples</h3>
@@ -126,127 +126,126 @@ import java.lang.annotation.Target;
  * </ul>
  *
  * @author Renan Alberto de Souza
- * @since 1.0.0
  * @see RateLimiterProperties.AlgorithmType
  * @see RateLimiterProperties.StorageType
  * @see RateLimiterProperties
+ * @since 1.0.0
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RateLimit {
 
-    /**
-     * The maximum number of requests allowed within the specified duration.
-     * <p>
-     * This defines the rate limit threshold. Once this number of requests
-     * is reached within the time window defined by {@link #duration()},
-     * subsequent requests will be rejected with HTTP 429 status.
-     * </p>
-     *
-     * <h4>Examples:</h4>
-     * <ul>
-     *   <li>{@code limit = 100} - Allow up to 100 requests</li>
-     *   <li>{@code limit = 10} - Allow up to 10 requests (more restrictive)</li>
-     *   <li>{@code limit = 1000} - Allow up to 1000 requests (less restrictive)</li>
-     * </ul>
-     *
-     * @return the maximum number of requests allowed
-     * @see #duration()
-     */
-    int limit();
+  /**
+   * The maximum number of requests allowed within the specified duration.
+   * <p>
+   * This defines the rate limit threshold. Once this number of requests is reached within the time
+   * window defined by {@link #duration()}, subsequent requests will be rejected with HTTP 429
+   * status.
+   * </p>
+   *
+   * <h4>Examples:</h4>
+   * <ul>
+   *   <li>{@code limit = 100} - Allow up to 100 requests</li>
+   *   <li>{@code limit = 10} - Allow up to 10 requests (more restrictive)</li>
+   *   <li>{@code limit = 1000} - Allow up to 1000 requests (less restrictive)</li>
+   * </ul>
+   *
+   * @return the maximum number of requests allowed
+   * @see #duration()
+   */
+  int limit();
 
-    /**
-     * The time window duration in seconds for the rate limit.
-     * <p>
-     * This defines the time period over which the {@link #limit()} is applied.
-     * The interpretation of this duration depends on the selected {@link #algorithm()}.
-     * </p>
-     *
-     * <h4>Examples:</h4>
-     * <ul>
-     *   <li>{@code duration = 60} - Time window of 1 minute</li>
-     *   <li>{@code duration = 3600} - Time window of 1 hour</li>
-     *   <li>{@code duration = 300} - Time window of 5 minutes</li>
-     * </ul>
-     *
-     * <h4>Algorithm-Specific Behavior:</h4>
-     * <ul>
-     *   <li><strong>FIXED_WINDOW:</strong> Fixed time periods (e.g., every 60 seconds)</li>
-     *   <li><strong>SLIDING_WINDOW:</strong> Rolling time window that moves with each request</li>
-     *   <li><strong>TOKEN_BUCKET:</strong> Time interval for token refill</li>
-     *   <li><strong>LEAKY_BUCKET:</strong> Time interval for request processing</li>
-     * </ul>
-     *
-     * @return the duration in seconds
-     * @see #limit()
-     * @see #algorithm()
-     */
-    int duration();
+  /**
+   * The time window duration in seconds for the rate limit.
+   * <p>
+   * This defines the time period over which the {@link #limit()} is applied. The interpretation of
+   * this duration depends on the selected {@link #algorithm()}.
+   * </p>
+   *
+   * <h4>Examples:</h4>
+   * <ul>
+   *   <li>{@code duration = 60} - Time window of 1 minute</li>
+   *   <li>{@code duration = 3600} - Time window of 1 hour</li>
+   *   <li>{@code duration = 300} - Time window of 5 minutes</li>
+   * </ul>
+   *
+   * <h4>Algorithm-Specific Behavior:</h4>
+   * <ul>
+   *   <li><strong>FIXED_WINDOW:</strong> Fixed time periods (e.g., every 60 seconds)</li>
+   *   <li><strong>SLIDING_WINDOW:</strong> Rolling time window that moves with each request</li>
+   *   <li><strong>TOKEN_BUCKET:</strong> Time interval for token refill</li>
+   *   <li><strong>LEAKY_BUCKET:</strong> Time interval for request processing</li>
+   * </ul>
+   *
+   * @return the duration in seconds
+   * @see #limit()
+   * @see #algorithm()
+   */
+  int duration();
 
-    /**
-     * The rate limiting algorithm to use for this endpoint.
-     * <p>
-     * Different algorithms provide different behaviors and are suitable
-     * for different use cases:
-     * </p>
-     *
-     * <h4>Algorithm Types:</h4>
-     * <ul>
-     *   <li><strong>FIXED_WINDOW:</strong> Simple and efficient, but allows traffic bursts at window boundaries</li>
-     *   <li><strong>SLIDING_WINDOW:</strong> More accurate rate limiting, prevents boundary bursts</li>
-     *   <li><strong>TOKEN_BUCKET:</strong> Allows controlled bursts while maintaining average rate</li>
-     *   <li><strong>LEAKY_BUCKET:</strong> Smooths traffic by processing at steady rate</li>
-     * </ul>
-     *
-     * <h4>Use Case Recommendations:</h4>
-     * <ul>
-     *   <li><strong>FIXED_WINDOW:</strong> General API endpoints, simple rate limiting</li>
-     *   <li><strong>SLIDING_WINDOW:</strong> Critical endpoints requiring precise control</li>
-     *   <li><strong>TOKEN_BUCKET:</strong> File uploads, batch operations that benefit from bursts</li>
-     *   <li><strong>LEAKY_BUCKET:</strong> Real-time systems requiring steady processing rates</li>
-     * </ul>
-     *
-     * @return the rate limiting algorithm to use
-     * @see RateLimiterProperties.AlgorithmType
-     * @see #limit()
-     * @see #duration()
-     */
-    RateLimiterProperties.AlgorithmType algorithm();
+  /**
+   * The rate limiting algorithm to use for this endpoint.
+   * <p>
+   * Different algorithms provide different behaviors and are suitable for different use cases:
+   * </p>
+   *
+   * <h4>Algorithm Types:</h4>
+   * <ul>
+   *   <li><strong>FIXED_WINDOW:</strong> Simple and efficient, but allows traffic bursts at window boundaries</li>
+   *   <li><strong>SLIDING_WINDOW:</strong> More accurate rate limiting, prevents boundary bursts</li>
+   *   <li><strong>TOKEN_BUCKET:</strong> Allows controlled bursts while maintaining average rate</li>
+   *   <li><strong>LEAKY_BUCKET:</strong> Smooths traffic by processing at steady rate</li>
+   * </ul>
+   *
+   * <h4>Use Case Recommendations:</h4>
+   * <ul>
+   *   <li><strong>FIXED_WINDOW:</strong> General API endpoints, simple rate limiting</li>
+   *   <li><strong>SLIDING_WINDOW:</strong> Critical endpoints requiring precise control</li>
+   *   <li><strong>TOKEN_BUCKET:</strong> File uploads, batch operations that benefit from bursts</li>
+   *   <li><strong>LEAKY_BUCKET:</strong> Real-time systems requiring steady processing rates</li>
+   * </ul>
+   *
+   * @return the rate limiting algorithm to use
+   * @see RateLimiterProperties.AlgorithmType
+   * @see #limit()
+   * @see #duration()
+   */
+  RateLimiterProperties.AlgorithmType algorithm();
 
-    /**
-     * The storage backend to use for tracking rate limit state.
-     * <p>
-     * The choice of storage affects performance, scalability, and deployment requirements:
-     * </p>
-     *
-     * <h4>Storage Types:</h4>
-     * <ul>
-     *   <li><strong>IN_MEMORY:</strong> Fastest performance, suitable for single-instance applications</li>
-     *   <li><strong>REDIS:</strong> Distributed storage, required for multi-instance deployments</li>
-     * </ul>
-     *
-     * <h4>Selection Guidelines:</h4>
-     * <ul>
-     *   <li><strong>Single Instance:</strong> Use IN_MEMORY for best performance</li>
-     *   <li><strong>Multiple Instances/Clusters:</strong> Use REDIS for shared state</li>
-     *   <li><strong>High Availability:</strong> Use REDIS with proper clustering</li>
-     * </ul>
-     *
-     * <h4>Prerequisites:</h4>
-     * <p>
-     * When using REDIS storage, ensure Redis dependencies are included:
-     * </p>
-     * <pre>{@code
-     * <dependency>
-     *     <groupId>org.springframework.boot</groupId>
-     *     <artifactId>spring-boot-starter-data-redis</artifactId>
-     * </dependency>
-     * }</pre>
-     *
-     * @return the storage backend to use
-     * @see RateLimiterProperties.StorageType
-     * @see #algorithm()
-     */
-    RateLimiterProperties.StorageType storage();
+  /**
+   * The storage backend to use for tracking rate limit state.
+   * <p>
+   * The choice of storage affects performance, scalability, and deployment requirements:
+   * </p>
+   *
+   * <h4>Storage Types:</h4>
+   * <ul>
+   *   <li><strong>IN_MEMORY:</strong> Fastest performance, suitable for single-instance applications</li>
+   *   <li><strong>REDIS:</strong> Distributed storage, required for multi-instance deployments</li>
+   * </ul>
+   *
+   * <h4>Selection Guidelines:</h4>
+   * <ul>
+   *   <li><strong>Single Instance:</strong> Use IN_MEMORY for best performance</li>
+   *   <li><strong>Multiple Instances/Clusters:</strong> Use REDIS for shared state</li>
+   *   <li><strong>High Availability:</strong> Use REDIS with proper clustering</li>
+   * </ul>
+   *
+   * <h4>Prerequisites:</h4>
+   * <p>
+   * When using REDIS storage, ensure Redis dependencies are included:
+   * </p>
+   * <pre>{@code
+   * <dependency>
+   *     <groupId>org.springframework.boot</groupId>
+   *     <artifactId>spring-boot-starter-data-redis</artifactId>
+   * </dependency>
+   * }</pre>
+   *
+   * @return the storage backend to use
+   * @see RateLimiterProperties.StorageType
+   * @see #algorithm()
+   */
+  RateLimiterProperties.StorageType storage();
 
 }

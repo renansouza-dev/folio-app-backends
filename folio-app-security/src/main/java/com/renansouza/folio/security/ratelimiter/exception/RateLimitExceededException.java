@@ -5,8 +5,8 @@ package com.renansouza.folio.security.ratelimiter.exception;
  */
 public class RateLimitExceededException extends RuntimeException {
 
-    public RateLimitExceededException() {
-        super();
-    }
+  public RateLimitExceededException() {
+    super();
+  }
 
 }

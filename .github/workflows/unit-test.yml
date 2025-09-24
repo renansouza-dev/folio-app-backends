@@ -12,7 +12,7 @@ on:
         type: string
       java-version:
         description: 'Java version to use'
-        default: '21'
+        default: '25'
         type: string
 
 jobs:

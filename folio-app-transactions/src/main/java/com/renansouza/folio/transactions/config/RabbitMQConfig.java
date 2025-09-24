@@ -14,35 +14,35 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${rabbitmq.queue-name:accounts}")
-    private String queueName;
+  @Value("${rabbitmq.queue-name:accounts}")
+  private String queueName;
 
-    @Getter
-    @Value("${rabbitmq.exchange-name:folio-app-exchange}")
-    private String exchangeName;
+  @Getter
+  @Value("${rabbitmq.exchange-name:folio-app-exchange}")
+  private String exchangeName;
 
-    @Getter
-    @Value("${rabbitmq.routing-key:folio.routing.key}")
-    private String routingKey;
+  @Getter
+  @Value("${rabbitmq.routing-key:folio.routing.key}")
+  private String routingKey;
 
-    @Bean
-    MessageConverter messageConverter(){
-        return new Jackson2JsonMessageConverter();
-    }
+  @Bean
+  MessageConverter messageConverter() {
+    return new Jackson2JsonMessageConverter();
+  }
 
-    @Bean
-    public Queue queue() {
-        return new Queue(queueName, true);
-    }
+  @Bean
+  public Queue queue() {
+    return new Queue(queueName, true);
+  }
 
-    @Bean
-    public TopicExchange exchange() {
-        return new TopicExchange(exchangeName);
-    }
+  @Bean
+  public TopicExchange exchange() {
+    return new TopicExchange(exchangeName);
+  }
 
-    @Bean
-    public Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
-    }
+  @Bean
+  public Binding binding(Queue queue, TopicExchange exchange) {
+    return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+  }
 
 }

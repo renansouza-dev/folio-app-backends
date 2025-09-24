@@ -12,22 +12,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAPIConfig {
 
-    @Bean
-    public OpenAPI myOpenAPI() {
-        Contact contact = new Contact();
-        contact.setEmail("renan@duck.com");
-        contact.setName("Renan Souza");
-        contact.setUrl("https://github.com/renansouza-dev");
+  @Bean
+  public OpenAPI myOpenAPI() {
+    Contact contact = new Contact();
+    contact.setEmail("renan@duck.com");
+    contact.setName("Renan Souza");
+    contact.setUrl("https://github.com/renansouza-dev");
 
-        License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
+    License mitLicense = new License().name("MIT License")
+        .url("https://choosealicense.com/licenses/mit/");
 
-        Info info = new Info()
-                .title("Transaction Management API")
-                .version("1.0")
-                .contact(contact)
-                .description("This API exposes endpoints to manage stock transactions.").termsOfService("https://github.com/renansouza-dev/terms")
-                .license(mitLicense);
+    Info info = new Info()
+        .title("Transaction Management API")
+        .version("1.0")
+        .contact(contact)
+        .description("This API exposes endpoints to manage stock transactions.")
+        .termsOfService("https://github.com/renansouza-dev/terms")
+        .license(mitLicense);
 
-        return new OpenAPI().info(info);
-    }
+    return new OpenAPI().info(info);
+  }
 }
