@@ -50,9 +50,8 @@ class AccountsServiceIT {
     factory.setPassword(rabbit.getAdminPassword());
 
     try {
-      rabbit.execInContainer("bash", "-c",
-          "rabbitmqadmin declare queue name=%s durable=true".formatted(QUEUE_NAME));
-    } catch (IOException | InterruptedException _) {
+      rabbit.execInContainer("bash", "-c", "rabbitmqadmin declare queue name=%s durable=true".formatted(QUEUE_NAME));
+    } catch (IOException | InterruptedException e) {
       throw new RuntimeException(e);
     }
   }
