@@ -52,7 +52,7 @@ class AccountsServiceIT {
     try {
       rabbit.execInContainer("bash", "-c",
           "rabbitmqadmin declare queue name=%s durable=true".formatted(QUEUE_NAME));
-    } catch (IOException | InterruptedException e) {
+    } catch (IOException | InterruptedException _) {
       throw new RuntimeException(e);
     }
   }
