@@ -12,7 +12,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class AccountsApplication {
 
-  static void main(String[] args) {
+  public static void main(String[] args) {
     SpringApplication.run(AccountsApplication.class, args);
   }
 

@@ -44,15 +44,17 @@ public class AccountsService {
   }
 
   void update(UUID id, @Valid AccountsRequest request) {
-    repository.findById(id)
-        .filter(acc -> !acc.getBroker().equals(request.broker()) || !acc.getAmount()
-            .equals(request.amount()))
-        .ifPresentOrElse(acc -> {
+    var account = repository.findById(id);
+    if (account.isEmpty()) {
+      throw new AccountNotFoundException(id);
+    }
+
+    account.filter(acc -> !acc.getBroker().equals(request.broker()) || !acc.getAmount().equals(request.amount()))
+        .ifPresent(acc -> {
           acc.setBroker(request.broker());
           acc.setAmount(request.amount());
+
           repository.save(acc);
-        }, () -> {
-          throw new AccountNotFoundException(id);
         });
   }
 }

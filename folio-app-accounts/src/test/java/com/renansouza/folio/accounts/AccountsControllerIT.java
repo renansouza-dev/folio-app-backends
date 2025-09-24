@@ -184,9 +184,8 @@ class AccountsControllerIT {
             "page.size", Matchers.equalTo(PAGE_SIZE));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "should successfully update an account {argumentsWithNames}")
   @MethodSource("provideAccountsToUpdate")
-  @DisplayName("should successfully update an account")
   void updateAccount(AccountsEntity entity, String broker, BigDecimal amount) {
     var savedEntity = repository.save(entity);
 
