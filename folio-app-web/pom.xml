@@ -17,7 +17,7 @@
     <properties>
         <flyway.version>11.1.0</flyway.version>
         <springdoc-openapi>2.8.14</springdoc-openapi>
-        <hibernate-validator.version>9.0.1.Final</hibernate-validator.version>
+        <hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
     </properties>
 
     <dependencies>
