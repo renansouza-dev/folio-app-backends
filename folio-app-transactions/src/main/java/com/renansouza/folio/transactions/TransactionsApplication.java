@@ -14,7 +14,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 public class TransactionsApplication {
 
   @Generated
-  public static void main(String[] args) {
+  static void main(String[] args) {
     SpringApplication.run(TransactionsApplication.class, args);
   }
 

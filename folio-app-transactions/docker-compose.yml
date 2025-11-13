@@ -1,54 +1,47 @@
 services:
   db:
-    image: postgres:16.3-alpine
+    image: postgres:${POSTGRES_VERSION:-18.0-alpine}
     container_name: postgres
-#    networks:
-#      - monitoring
-#      - transactions
     ports:
-       - "5432:5432"
+       - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      POSTGRES_USER: folio-user
-      POSTGRES_PASSWORD: folio-pass
-      POSTGRES_DB: folio-app-transactions
+      POSTGRES_USER: ${POSTGRES_USER:-folio-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-folio-pass}
+      POSTGRES_DB: ${POSTGRES_DB:-folio-app-transactions}
 
   rabbitmq:
-    image: rabbitmq:4.0.2-management-alpine
-    container_name: rabbitmq
-    #    networks:
-    #      - monitoring
-    #      - transactions
+    image: rabbitmq:${RABBITMQ_VERSION:-4.2.0-management-alpine}
+    container_name: ${RABBITMQ_CONTAINER_NAME:-rabbitmq}
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes:
-      - ./init/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./init/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-folio-user}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-folio-pass}
 
   transactions:
-    image: renansouza-dev/folio-app-transactions
-    container_name: folio-app-transactions
-#      - monitoring
-#      - transactions
+    image: ${ACCOUNTS_IMAGE:-renansouza-dev/folio-app-transactions}
+    container_name: ${ACCOUNTS_CONTAINER_NAME:-folio-app-transactions}
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ${BUILD_CONTEXT:-.}
+      dockerfile: ${DOCKERFILE:-Dockerfile}
     ports:
-      - "8080:8080"
-#    networks:
+      - "${ACCOUNTS_PORT:-8080}:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/folio-app-transactions
-      - SPRING_DATASOURCE_USERNAME=folio-user
-      - SPRING_DATASOURCE_PASSWORD=folio-pass
-      - SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST:-db}:${DB_PORT:-5432}/${POSTGRES_DB:-folio-app-accounts}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-folio-user}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-folio-pass}
+      - SPRING_DATASOURCE_DRIVER=${SPRING_DATASOURCE_DRIVER:-org.postgresql.Driver}
+      - SPRING_RABBITMQ_HOST=${RABBITMQ_HOST:-rabbitmq}
+      - RABBITMQ_QUEUE=${RABBITMQ_QUEUE_TRANSACTIONS:-accounts.queue}
+      - RABBITMQ_QUEUE_DLQ=${RABBITMQ_QUEUE_DLQ:-accounts.dead-letter}
+      - RABBITMQ_EXCHANGE=${RABBITMQ_EXCHANGE_TRANSACTIONS:-accounts.exchange}
+      - RABBITMQ_ROUTING_KEY=${RABBITMQ_ROUTING_KEY:-accounts.#}
+    depends_on:
+      - db
+      - rabbitmq
     deploy:
       resources:
         limits:
           cpus: '0.50'  # Limit the container to use at most 50% of a CPU core
           memory: '256M'  # Limit the container to use at most 256MB of memory
-
-#networks:
-#  transactions:
-#    driver: bridge
-#  monitoring:
-#    external: true

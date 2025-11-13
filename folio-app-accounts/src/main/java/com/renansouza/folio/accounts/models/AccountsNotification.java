@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record AccountsNotification(
-    @JsonProperty("account") UUID account,
+    @JsonProperty("account") UUID broker,
     @JsonProperty("amount") BigDecimal amount) implements Serializable {
-
 }

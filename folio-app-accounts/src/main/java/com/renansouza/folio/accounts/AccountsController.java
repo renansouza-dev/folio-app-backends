@@ -12,8 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -53,8 +51,8 @@ public class AccountsController {
           description = "Found zero accounts")
   })
   @GetMapping
-  @Cacheable(value = "accountsCache", key = "#root.methodName + #broker + '_' + #pageSize + '_' + #pageNumber + '_' + #property + '_' + #direction")
-  ResponseEntity<Page<AccountsResponse>> getAccounts(@RequestParam(required = false) String broker,
+  ResponseEntity<Page<AccountsResponse>> getAccounts(
+      @RequestParam(required = false) String broker,
       @RequestParam(required = false, defaultValue = "20") String pageSize,
       @RequestParam(required = false, defaultValue = "0") String pageNumber,
       @RequestParam(required = false, defaultValue = "asc") String direction,
@@ -78,7 +76,6 @@ public class AccountsController {
           description = "Create a new account",
           content = {@Content(schema = @Schema(implementation = AccountsResponse.class))})
   })
-  @CacheEvict(value = "accountsCache", allEntries = true)
   void addAccount(@Valid @RequestBody AccountsRequest request) {
     service.save(request);
   }
@@ -92,7 +89,6 @@ public class AccountsController {
           description = "Update an account",
           content = {@Content(schema = @Schema(implementation = AccountsResponse.class))})
   })
-  @CacheEvict(value = "accountsCache", allEntries = true)
   void updateAccount(@PathVariable UUID id, @Valid @RequestBody AccountsRequest request) {
     service.update(id, request);
   }

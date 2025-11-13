@@ -56,32 +56,31 @@ class AccountsServiceTest {
   void updateAccountAmount() {
     // Given
     var notification = new AccountsNotification(UUID.randomUUID(), BigDecimal.ONE);
-    when(repository.existsById(notification.account())).thenReturn(true);
+    when(repository.existsById(notification.broker())).thenReturn(true);
 
     // When
     service.updateAccountAmount(notification);
 
     // Then
-    verify(repository, ONCE).existsById(notification.account());
-    verify(repository, ONCE).updateAmountById(notification.account(), notification.amount());
+    verify(repository, ONCE).existsById(notification.broker());
+    verify(repository, ONCE).updateAmountById(notification.broker(), notification.amount());
   }
 
   @Test
   void failToUpdateAccountAmount() {
     // Given
     var notification = new AccountsNotification(UUID.randomUUID(), BigDecimal.ONE);
-    when(repository.existsById(notification.account())).thenReturn(false);
+    when(repository.existsById(notification.broker())).thenReturn(false);
 
     // When
     var accountAlreadyExistsException = assertThrows(AccountNotFoundException.class,
         () -> service.updateAccountAmount(notification));
 
     // Then
-    var expectedMessage = String.format("The provided account id %s was not found",
-        notification.account());
+    var expectedMessage = String.format("The provided account id %s was not found", notification.broker());
     assertEquals(expectedMessage, accountAlreadyExistsException.getMessage());
-    verify(repository, ONCE).existsById(notification.account());
-    verify(repository, never()).updateAmountById(notification.account(), notification.amount());
+    verify(repository, ONCE).existsById(notification.broker());
+    verify(repository, never()).updateAmountById(notification.broker(), notification.amount());
   }
 
   @ParameterizedTest
