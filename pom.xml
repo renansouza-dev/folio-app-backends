@@ -8,7 +8,6 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.7</version>
         <relativePath/>
-        <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.renansouza</groupId>
@@ -29,8 +28,8 @@
 
     <properties>
         <java.version>25</java.version>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <lombok.version>1.18.42</lombok.version>

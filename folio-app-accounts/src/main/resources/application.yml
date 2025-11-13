@@ -1,6 +1,12 @@
 spring:
   application:
     name: folio-app-accounts
+  cache:
+    type: caffeine
+    cache-names:
+      - accounts
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=10m,recordStats
   jpa:
     hibernate:
       ddl-auto: none
@@ -10,22 +16,23 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:folio-user}
     password: ${SPRING_DATASOURCE_PASSWORD:folio-pass}
   rabbitmq:
-    username: ${SPRING_MESSAGING_USERNAME:folio-user}
-    password: ${SPRING_MESSAGING_PASSWORD:folio-pass}
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:folio-user}
+    password: ${SPRING_RABBITMQ_PASSWORD:folio-pass}
 
-application:
-  caching:
-    spring:
-      cacheTTL: 43200000
+rabbitmq:
+  queue:
+    name: ${RABBITMQ_QUEUE:accounts.queue}
 
 management:
   endpoints:
     web:
       exposure:
-        include: "prometheus"
+        include: health,metrics,prometheus
   metrics:
+    enable:
+      cache: true
+      caffeine: true
     tags:
       application: ${spring.application.name}
-
-server:
-  port: 8081

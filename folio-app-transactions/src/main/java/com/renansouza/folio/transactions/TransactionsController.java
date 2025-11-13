@@ -13,8 +13,6 @@ import jakarta.validation.Valid;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -55,7 +53,6 @@ public class TransactionsController {
           description = "Found zero transactions")
   })
   @GetMapping
-  @Cacheable(value = "transactionsCache", key = "#root.methodName + '_' + #asset + '_' + #broker + '_' + #pageSize + '_' + #pageNumber + '_' + #property + '_' + #direction")
   ResponseEntity<Page<TransactionsResponse>> getTransactions(
       @RequestParam(required = false) UUID broker,
       @RequestParam(required = false) String asset,
@@ -82,7 +79,6 @@ public class TransactionsController {
           description = "Create a new transaction",
           content = {@Content(schema = @Schema(implementation = TransactionsRequest.class))})
   })
-  @CacheEvict(value = "transactionsCache", allEntries = true)
   void addTransaction(@Valid @RequestBody TransactionsRequest request) {
     service.save(request);
   }
@@ -91,7 +87,6 @@ public class TransactionsController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @Operation(summary = "Delete a transaction using its id")
   @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Delete transaction")})
-  @CacheEvict(value = "transactionsCache", allEntries = true)
   @Scheduled(fixedRateString = "${application.caching.spring.cacheTTL}")
   void deleteTransaction(@PathVariable("id") Long id) {
     service.delete(id);

@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -14,15 +15,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-  @Value("${rabbitmq.queue-name:accounts}")
+  @Value("${rabbitmq.queue.name}")
   private String queueName;
 
+  @Value("${rabbitmq.queue.dlq:#{null}}")
+  private String dlqName;
+
   @Getter
-  @Value("${rabbitmq.exchange-name:folio-app-exchange}")
+  @Value("${rabbitmq.exchange.name}")
   private String exchangeName;
 
   @Getter
-  @Value("${rabbitmq.routing-key:folio.routing.key}")
+  @Value("${rabbitmq.routing-key}")
   private String routingKey;
 
   @Bean
@@ -31,18 +35,33 @@ public class RabbitMQConfig {
   }
 
   @Bean
-  public Queue queue() {
-    return new Queue(queueName, true);
+  public Queue accountsQueue() {
+    QueueBuilder builder = QueueBuilder.durable(queueName);
+
+    if (dlqName != null && !dlqName.isEmpty()) {
+      builder.withArgument("x-dead-letter-exchange", "")
+          .withArgument("x-dead-letter-routing-key", dlqName);
+    }
+
+    return builder.build();
   }
 
   @Bean
-  public TopicExchange exchange() {
+  public Queue accountsDeadLetterQueue() {
+    if (dlqName != null && !dlqName.isEmpty()) {
+      return QueueBuilder.durable(dlqName).build();
+    }
+    return null;
+  }
+
+  @Bean
+  public TopicExchange accountsExchange() {
     return new TopicExchange(exchangeName);
   }
 
   @Bean
-  public Binding binding(Queue queue, TopicExchange exchange) {
-    return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+  public Binding binding() {
+    return BindingBuilder.bind(accountsQueue()).to(accountsExchange()).with(routingKey);
   }
 
 }
