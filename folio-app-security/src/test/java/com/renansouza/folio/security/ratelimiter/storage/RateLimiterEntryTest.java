@@ -338,7 +338,7 @@ class RateLimiterEntryTest {
                 storage.increment(key, incrementValue, ttl);
               }
               successCount.incrementAndGet();
-            } catch (Exception e) {
+            } catch (Exception _) {
               // ignore
             } finally {
               completeLatch.countDown();
@@ -389,7 +389,7 @@ class RateLimiterEntryTest {
                 storage.increment(key, 1L, ttl);
               }
               writeSuccessCount.incrementAndGet();
-            } catch (Exception e) {
+            } catch (Exception _) {
               // ignore
             } finally {
               completeLatch.countDown();
@@ -410,7 +410,7 @@ class RateLimiterEntryTest {
                 storage.exists(key);
               }
               readSuccessCount.incrementAndGet();
-            } catch (Exception e) {
+            } catch (Exception _) {
               // ignore
             } finally {
               completeLatch.countDown();
@@ -459,7 +459,7 @@ class RateLimiterEntryTest {
               storage.expire(key, longTtl);
 
               operationCount.incrementAndGet();
-            } catch (Exception e) {
+            } catch (Exception _) {
               // ignore
             } finally {
               completeLatch.countDown();
@@ -535,7 +535,7 @@ class RateLimiterEntryTest {
                 storage.get(key);
                 storage.increment(key, 1L, ttl);
               }
-            } catch (Exception e) {
+            } catch (Exception _) {
               // ignore
             } finally {
               completeLatch.countDown();
