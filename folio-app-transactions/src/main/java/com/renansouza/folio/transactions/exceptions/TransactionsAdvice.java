@@ -8,6 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,8 +21,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class TransactionsAdvice extends ResponseEntityExceptionHandler {
 
   @Override
+  @Nullable
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-      HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+      @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
     var req = ((ServletWebRequest) request).getRequest();
     var errorAttributes = getErrorAttributes(
         HttpStatus.BAD_REQUEST,

@@ -36,11 +36,10 @@ public class RabbitMQConfig {
 
   @Bean
   public Queue accountsQueue() {
-    QueueBuilder builder = QueueBuilder.durable(queueName);
+    var builder = QueueBuilder.durable(queueName).withArgument("x-dead-letter-exchange", "");
 
     if (dlqName != null && !dlqName.isEmpty()) {
-      builder.withArgument("x-dead-letter-exchange", "")
-          .withArgument("x-dead-letter-routing-key", dlqName);
+      builder.withArgument("x-dead-letter-routing-key", dlqName);
     }
 
     return builder.build();

@@ -2,6 +2,8 @@ package com.renansouza.folio.accounts;
 
 import com.renansouza.folio.accounts.models.AccountsNotification;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -30,13 +32,20 @@ class AccountsListenerTest {
 
   @Test
   void getAccountUpdate() {
-    // Given
     var notification = new AccountsNotification(UUID.randomUUID(), BigDecimal.ONE);
 
-    // When
     listener.getAccountUpdate(notification);
 
-    // Then
+    verify(service, times(1)).updateAccountAmount(notification);
+  }
+
+  @Test
+  void shouldThrowExceptionWhenServiceFails() {
+    var notification = new AccountsNotification(UUID.randomUUID(), BigDecimal.ONE);
+
+    doThrow(new RuntimeException("Service failed")).when(service).updateAccountAmount(notification);
+
+    assertThrows(RuntimeException.class, () -> listener.getAccountUpdate(notification));
     verify(service, times(1)).updateAccountAmount(notification);
   }
 }
