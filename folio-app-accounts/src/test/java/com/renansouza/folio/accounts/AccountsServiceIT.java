@@ -31,11 +31,11 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 @Tag("Integration")
 class AccountsServiceIT {
 
-  private static final String QUEUE_NAME = "accounts";
+  private static final String QUEUE_NAME = "accounts.queue";
   private static final ConnectionFactory factory = new ConnectionFactory();
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16.3-alpine");
+  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18.0-alpine");
   static RabbitMQContainer rabbit = new RabbitMQContainer(
-      "rabbitmq:4.0.2-management-alpine").withExposedPorts(5672);
+      "rabbitmq:4.2.0-management-alpine").withExposedPorts(5672);
   @Autowired
   AccountsRepository repository;
 
@@ -75,8 +75,7 @@ class AccountsServiceIT {
   }
 
   private static void sendMessage(UUID brokerId) {
-    try (var connection = factory.newConnection();
-        var channel = connection.createChannel()) {
+    try (var connection = factory.newConnection(); var channel = connection.createChannel()) {
 
       var notification = new AccountsNotification(brokerId, BigDecimal.TEN);
       var message = new ObjectMapper().writeValueAsString(notification);
@@ -110,8 +109,7 @@ class AccountsServiceIT {
   }
 
   private boolean isMessageConsumed() {
-    try (var connection = factory.newConnection();
-        var channel = connection.createChannel()) {
+    try (var connection = factory.newConnection(); var channel = connection.createChannel()) {
 
       return channel.basicGet(QUEUE_NAME, false) == null;
     } catch (IOException | TimeoutException e) {

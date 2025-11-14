@@ -48,9 +48,9 @@ class TransactionsControllerIT {
   private static final String PATH = "/v1/transactions";
   private static final int PAGE_SIZE = 20;
   private static final int TOTAL_PAGES = 1;
-  private static final String QUEUE_NAME = "accounts";
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16.3-alpine");
-  static RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:4.0.2-management-alpine");
+  private static final String QUEUE_NAME = "accounts.queue";
+  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18.0-alpine");
+  static RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:4.2.0-management-alpine");
   @Autowired
   TransactionsRepository repository;
   @LocalServerPort
