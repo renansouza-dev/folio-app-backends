@@ -36,14 +36,17 @@ import org.testcontainers.junit.jupiter.Container;
 
 @Tag("Integration")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {"spring.rabbitmq.listener.simple.auto-startup=false"})
+@TestPropertySource(properties = {
+    "spring.rabbitmq.listener.simple.auto-startup=false",
+    "spring.cache.type=NONE"
+})
 class AccountsControllerIT {
 
   private static final String PATH = "/v1/accounts";
   private static final int PAGE_SIZE = 20;
   private static final int TOTAL_PAGES = 1;
   @Container
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16.3-alpine");
+  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18.0-alpine");
   @Autowired
   AccountsRepository repository;
   @LocalServerPort
