@@ -23,8 +23,11 @@ services:
     image: ${ACCOUNTS_IMAGE:-renansouza-dev/folio-app-accounts}
     container_name: ${ACCOUNTS_CONTAINER_NAME:-folio-app-accounts}
     build:
-      context: ${BUILD_CONTEXT:-.}
-      dockerfile: ${DOCKERFILE:-Dockerfile}
+      context: ${BUILD_CONTEXT:-..}
+      dockerfile: ${DOCKERFILE:-folio-app-web/Dockerfile}
+      args:
+        SERVICE_NAME: accounts
+        JAR_FILE: folio-app-accounts/target/folio-app-accounts-*.jar
     ports:
       - "${ACCOUNTS_PORT:-8080}:8080"
     environment:
@@ -38,5 +41,5 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.50'  # Limit the container to use at most 50% of a CPU core
-          memory: '256M'  # Limit the container to use at most 256MB of memory
+          cpus: '0.50'
+          memory: '256M'

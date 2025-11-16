@@ -20,15 +20,18 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-folio-pass}
 
   transactions:
-    image: ${ACCOUNTS_IMAGE:-renansouza-dev/folio-app-transactions}
-    container_name: ${ACCOUNTS_CONTAINER_NAME:-folio-app-transactions}
+    image: ${TRANSACTIONS_IMAGE:-renansouza-dev/folio-app-transactions}
+    container_name: ${TRANSACTIONS_CONTAINER_NAME:-folio-app-transactions}
     build:
-      context: ${BUILD_CONTEXT:-.}
-      dockerfile: ${DOCKERFILE:-Dockerfile}
+      context: ${BUILD_CONTEXT:-..}
+      dockerfile: ${DOCKERFILE:-folio-app-web/Dockerfile}
+      args:
+        SERVICE_NAME: transactions
+        JAR_FILE: folio-app-transactions/target/folio-app-transactions-*.jar
     ports:
-      - "${ACCOUNTS_PORT:-8080}:8080"
+      - "${TRANSACTIONS_PORT:-8080}:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST:-db}:${DB_PORT:-5432}/${POSTGRES_DB:-folio-app-accounts}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST:-db}:${DB_PORT:-5432}/${POSTGRES_DB:-folio-app-transactions}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-folio-user}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-folio-pass}
       - SPRING_DATASOURCE_DRIVER=${SPRING_DATASOURCE_DRIVER:-org.postgresql.Driver}
@@ -43,5 +46,5 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.50'  # Limit the container to use at most 50% of a CPU core
-          memory: '256M'  # Limit the container to use at most 256MB of memory
+          cpus: '0.50'
+          memory: '256M'
